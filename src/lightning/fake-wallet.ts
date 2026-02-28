@@ -1,0 +1,107 @@
+/**
+ * FakeWallet — deterministic Lightning backend for testing.
+ * No Docker, no LND, no network calls.
+ * Fully implements ILightningBackend with predictable responses.
+ */
+
+import { randomBytes } from 'node:crypto';
+import type {
+	Bolt11Invoice,
+	DecodedInvoice,
+	ILightningBackend,
+	InvoiceUpdate,
+	PaymentResult,
+} from './interface.js';
+
+export class FakeWallet implements ILightningBackend {
+	private invoices = new Map<string, { amount: number; memo: string; settled: boolean }>();
+	private updateListeners: Array<(update: InvoiceUpdate) => void> = [];
+
+	async createInvoice(amount: number, memo: string): Promise<Bolt11Invoice> {
+		const paymentHash = randomBytes(32).toString('hex');
+		// Fake BOLT11 with identifiable prefix
+		const bolt11 = `lnbc${amount}n1fake${paymentHash.slice(0, 20)}`;
+
+		this.invoices.set(paymentHash, { amount, memo, settled: false });
+
+		return { bolt11, paymentHash, amount };
+	}
+
+	async *subscribeInvoices(): AsyncIterable<InvoiceUpdate> {
+		// Yield updates as they come in via simulatePayment
+		const queue: InvoiceUpdate[] = [];
+		let resolve: (() => void) | null = null;
+
+		this.updateListeners.push((update) => {
+			queue.push(update);
+			resolve?.();
+		});
+
+		while (true) {
+			if (queue.length > 0) {
+				yield queue.shift()!;
+			} else {
+				await new Promise<void>((r) => {
+					resolve = r;
+				});
+			}
+		}
+	}
+
+	async decodePayReq(bolt11: string): Promise<DecodedInvoice> {
+		// Extract amount from fake bolt11 format
+		const amountMatch = bolt11.match(/^lnbc(\d+)n1/);
+		const amount = amountMatch ? Number.parseInt(amountMatch[1], 10) : 1000;
+
+		return {
+			paymentHash: bolt11.slice(-20).padEnd(64, '0'),
+			amount,
+			description: 'Fake invoice',
+			expiry: 3600,
+			timestamp: Math.floor(Date.now() / 1000),
+		};
+	}
+
+	async estimateFee(_bolt11: string): Promise<number> {
+		// Deterministic: always 1 sat fee
+		return 1;
+	}
+
+	async sendPayment(_bolt11: string, _feeLimit: number): Promise<PaymentResult> {
+		const preimage = randomBytes(32).toString('hex');
+		return {
+			success: true,
+			preimage,
+			fee: 1,
+		};
+	}
+
+	/**
+	 * Test helper — simulate invoice settlement.
+	 * Triggers subscribeInvoices() listeners.
+	 */
+	simulatePayment(paymentHash: string): void {
+		const invoice = this.invoices.get(paymentHash);
+		if (invoice) {
+			invoice.settled = true;
+			const update: InvoiceUpdate = {
+				paymentHash,
+				settled: true,
+				amount: invoice.amount,
+			};
+			for (const listener of this.updateListeners) {
+				listener(update);
+			}
+		}
+	}
+
+	/** Test helper — check if an invoice exists */
+	hasInvoice(paymentHash: string): boolean {
+		return this.invoices.has(paymentHash);
+	}
+
+	/** Test helper — check if an invoice is settled */
+	isSettled(paymentHash: string): boolean {
+		return this.invoices.get(paymentHash)?.settled ?? false;
+	}
+}

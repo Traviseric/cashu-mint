@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: cashu
+      POSTGRES_PASSWORD: cashu
+      POSTGRES_DB: cashu_mint
+    volumes:
+      - ./docker-data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cashu"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

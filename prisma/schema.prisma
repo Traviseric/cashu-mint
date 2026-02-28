@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QuoteState {
+  UNPAID
+  PAID
+  PENDING
+  ISSUED
+  EXPIRED
+}
+
+enum QuoteType {
+  MINT
+  MELT
+}
+
+model Keyset {
+  id     String  @id
+  active Boolean @default(true)
+  unit   String  @default("sat")
+
+  spentProofs     SpentProof[]
+  blindSignatures BlindSignature[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("keysets")
+}
+
+model SpentProof {
+  secret   String @id
+  amount   Int
+  keysetId String @map("keyset_id")
+  c        String
+  witness  Json?
+
+  keyset Keyset @relation(fields: [keysetId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("spent_proofs")
+}
+
+model BlindSignature {
+  id       Int    @id @default(autoincrement())
+  amount   Int
+  c_       String @map("c_prime")
+  keysetId String @map("keyset_id")
+  quoteId  String? @map("quote_id")
+
+  keyset Keyset @relation(fields: [keysetId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([quoteId])
+  @@map("blind_signatures")
+}
+
+model PendingQuote {
+  id      String     @id
+  request String
+  state   QuoteState @default(UNPAID)
+  type    QuoteType
+  amount  Int
+  unit    String     @default("sat")
+  expiry  DateTime
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("pending_quotes")
+}
