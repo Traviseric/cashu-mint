@@ -205,7 +205,7 @@ export class MintService {
 					amount: p.amount,
 					keysetId: p.id,
 					c: p.C,
-					witness: p.witness ? p.witness : undefined,
+					witness: p.witness,
 				})),
 				signatures.map((s, i) => ({
 					amount: s.amount,
@@ -460,7 +460,7 @@ export class MintService {
 					amount: p.amount,
 					keysetId: p.id,
 					c: p.C,
-					witness: p.witness ? p.witness : undefined,
+					witness: p.witness,
 				})),
 				quote.id,
 			);

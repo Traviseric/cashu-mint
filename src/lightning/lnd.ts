@@ -143,19 +143,26 @@ export class LndBackend implements ILightningBackend {
 	}
 
 	async estimateFee(bolt11: string): Promise<number> {
-		// Decode to get dest pubkey and amount, then estimate routing fee
-		const decoded = await this.decodePayReq(bolt11);
-		const destBytes = Buffer.from(decoded.paymentHash, 'hex'); // Note: using dest pubkey would be more accurate,
-		// but LND's EstimateRouteFee only needs dest+amount. Since PayReq doesn't expose dest as bytes
-		// directly from our proto, we fall back to a 1% + 1 sat minimum reserve.
-		// For production accuracy, extend the proto with `destination` field and convert pubkey to bytes.
-		void destBytes; // unused — using fallback below
-
 		return new Promise((resolve, reject) => {
-			// Use a safe fee reserve: max(1% of amount, 1 sat)
-			const feeReserve = Math.max(Math.ceil(decoded.amount * 0.01), 1);
-			void reject; // suppress unused warning
-			resolve(feeReserve);
+			this.client.DecodePayReq({ pay_req: bolt11 }, (err, response) => {
+				if (err) {
+					reject(new LightningBackendError(`DecodePayReq failed: ${err.message}`));
+					return;
+				}
+				const amount = Number(response.num_satoshis);
+				const destBytes = Buffer.from(response.destination, 'hex');
+				this.client.EstimateRouteFee(
+					{ dest: destBytes, amt_sat: amount },
+					(feeErr, feeResponse) => {
+						if (feeErr) {
+							// Fall back to 1% + 1 sat if EstimateRouteFee RPC fails
+							resolve(Math.max(Math.ceil(amount * 0.01), 1));
+							return;
+						}
+						resolve(Math.ceil(Number(feeResponse.routing_fee_msat) / 1000));
+					},
+				);
+			});
 		});
 	}
 
@@ -181,14 +188,12 @@ export class LndBackend implements ILightningBackend {
 					}
 
 					const preimage = Buffer.from(response.payment_preimage).toString('hex');
-					const paymentHash = Buffer.from(response.payment_hash).toString('hex');
 					resolve({
 						success: true,
 						preimage,
 						fee: 0, // actual fee not available in SendResponse without Route message
 						error: undefined,
 					});
-					void paymentHash;
 				},
 			);
 		});
@@ -215,6 +220,7 @@ interface LndClient {
 		cb: (
 			err: grpc.ServiceError | null,
 			res: {
+				destination: string;
 				payment_hash: string;
 				num_satoshis: string | number;
 				description: string;
