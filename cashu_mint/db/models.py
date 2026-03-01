@@ -13,6 +13,29 @@ from sqlalchemy import BigInteger, Boolean, Column, DateTime, Integer, String, T
 from cashu_mint.db.base import Base
 
 
+class BlindedSignatureRecord(Base):
+    """One row per issued blind signature — used by NUT-09 restore.
+
+    Keyed by ``B_`` (the blinded message point).  When a wallet loses its
+    tokens and needs to recover via NUT-09, it replays its original B' values;
+    the mint looks them up here and re-returns the blind signatures.
+
+    Also enables NUT-13 wallet recovery: deterministically-derived secrets
+    produce deterministic B' values, so the wallet can regenerate them from
+    its seed and call /v1/restore.
+    """
+
+    __tablename__ = "blinded_signatures"
+
+    B_ = Column(String(66), primary_key=True)   # blinded msg point B' (33-byte hex)
+    amount = Column(BigInteger, nullable=False)
+    keyset_id = Column(String(16), nullable=False)
+    C_ = Column(String(66), nullable=False)      # blind signature C' (33-byte hex)
+    dleq_e = Column(String(64), nullable=True)   # DLEQ challenge (NUT-12)
+    dleq_s = Column(String(64), nullable=True)   # DLEQ response (NUT-12)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+
+
 class Proof(Base):
     """One row per spent token.
 

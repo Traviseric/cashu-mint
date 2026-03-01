@@ -75,10 +75,12 @@ async def generic_error_handler(request: Request, exc: Exception) -> JSONRespons
 from cashu_mint.routers.keys import router as keys_router  # noqa: E402
 from cashu_mint.routers.admin import router as admin_router  # noqa: E402
 from cashu_mint.routers.info import router as info_router  # noqa: E402
+from cashu_mint.routers.restore import router as restore_router  # noqa: E402
 
 app.include_router(keys_router, prefix="/v1")
 app.include_router(admin_router, prefix="/v1")
 app.include_router(info_router, prefix="/v1")
+app.include_router(restore_router, prefix="/v1")
 
 
 @app.get("/health")

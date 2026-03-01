@@ -15,7 +15,39 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from cashu_mint.db.keyset_models import Keyset, KeysetKey
-from cashu_mint.db.models import MeltQuote, MintQuote, Proof
+from cashu_mint.db.models import BlindedSignatureRecord, MeltQuote, MintQuote, Proof
+
+
+# ---------------------------------------------------------------------------
+# BlindedSignatureRecord CRUD  (NUT-09 restore / NUT-13 compatibility)
+# ---------------------------------------------------------------------------
+
+
+async def store_blind_signature(
+    db: AsyncSession, record: BlindedSignatureRecord
+) -> None:
+    """Persist an issued blind signature for later restore.
+
+    If the same B_ was already stored (idempotent re-sign during a retry),
+    silently ignore the duplicate rather than raising.
+    """
+    db.add(record)
+    try:
+        await db.flush()
+    except IntegrityError:
+        await db.rollback()
+
+
+async def get_blind_signatures(
+    db: AsyncSession, B_values: list[str]
+) -> Sequence[BlindedSignatureRecord]:
+    """Return all previously-issued blind signatures whose B_ is in *B_values*."""
+    if not B_values:
+        return []
+    result = await db.execute(
+        select(BlindedSignatureRecord).where(BlindedSignatureRecord.B_.in_(B_values))
+    )
+    return result.scalars().all()
 
 
 # ---------------------------------------------------------------------------
