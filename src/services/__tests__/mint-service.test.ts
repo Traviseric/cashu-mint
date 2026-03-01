@@ -409,6 +409,31 @@ describe('MintService', () => {
 			).rejects.toThrow();
 		});
 
+		itDb('getMeltQuote: returns EXPIRED and persists state for past-expiry UNPAID quote', async () => {
+			const { createMeltQuote } = await import('../../db/repository.js');
+
+			// Create a quote directly with expiry in the past (bypasses service TTL)
+			const quoteId = `expired-melt-${Date.now()}`;
+			await createMeltQuote({
+				id: quoteId,
+				request: 'lnbc10n1fakeexpiredquote00000000',
+				amount: 10,
+				unit: 'sat',
+				feeReserve: 1,
+				expiry: new Date(Date.now() - 5000), // 5 seconds in the past
+			});
+
+			const result = await service.getMeltQuote(quoteId);
+
+			expect(result.state).toBe('EXPIRED');
+			expect(result.amount).toBe(10);
+			expect(result.fee_reserve).toBe(1);
+
+			// Subsequent call must also return EXPIRED (state persisted to DB)
+			const result2 = await service.getMeltQuote(quoteId);
+			expect(result2.state).toBe('EXPIRED');
+		});
+
 		itDb('full melt flow: mint → melt', async () => {
 			// 1. Mint tokens
 			const mintQuote = await service.createMintQuote(16, 'sat');

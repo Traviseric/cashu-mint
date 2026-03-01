@@ -381,6 +381,18 @@ export class MintService {
 			throw new QuoteNotFoundError();
 		}
 
+		// Transition expired UNPAID quotes — mirrors getMintQuote behavior
+		if (quote.state === 'UNPAID' && new Date() > quote.expiry) {
+			await repo.updateQuoteState(quoteId, 'EXPIRED');
+			return {
+				quote: quote.id,
+				amount: quote.amount,
+				fee_reserve: quote.feeReserve,
+				state: 'EXPIRED',
+				expiry: Math.floor(quote.expiry.getTime() / 1000),
+			};
+		}
+
 		return {
 			quote: quote.id,
 			amount: quote.amount,
