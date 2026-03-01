@@ -1,0 +1,209 @@
+{
+  "success": true,
+  "next_box": "CONDUCTOR",
+  "context": {
+    "audit_type": "feature",
+    "features_discovered": 24,
+    "features_verified": 0,
+    "features_complete": 0,
+    "features_partial": 0,
+    "features_missing": 24,
+    "features_stub": 0,
+    "coverage_pct": 0,
+    "findings": [
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "NUT-00: No cryptographic engine exists. The foundational Blind Diffie-Hellman Key Exchange (BDHKE) required for all blind signature operations is entirely absent.",
+        "recommendation": "Implement BDHKE primitives: hash_to_curve, blind, sign_blinded, unblind, verify. These are the cryptographic backbone of the entire mint.",
+        "feature_name": "NUT-00: Cryptography & Models (BDHKE)",
+        "effort": "high"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "NUT-01: No mint public key endpoint exists. Wallets cannot discover the mint's signing keys without GET /v1/keys.",
+        "recommendation": "Implement GET /v1/keys endpoint that returns active keyset public keys per denomination.",
+        "feature_name": "NUT-01: Mint Public Keys",
+        "effort": "medium"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "NUT-02: No keyset management exists. GET /v1/keysets and GET /v1/keys/{keyset_id} are absent. No keyset generation, rotation, or fee configuration.",
+        "recommendation": "Implement keyset generation (secp256k1 keypairs per denomination), persistence, rotation logic, and REST endpoints.",
+        "feature_name": "NUT-02: Keysets & Fees",
+        "effort": "high"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "NUT-03: No token swap endpoint exists. POST /v1/swap (split/merge tokens) is the core everyday wallet operation and is completely missing.",
+        "recommendation": "Implement POST /v1/swap: verify input proofs, check double-spend, blind-sign outputs, mark inputs as spent.",
+        "feature_name": "NUT-03: Swapping Tokens",
+        "effort": "high"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "NUT-04: No minting flow exists. POST /v1/mint/quote/bolt11 and POST /v1/mint/bolt11 are absent. Users cannot deposit Bitcoin and receive ecash.",
+        "recommendation": "Implement mint quote creation (generate Lightning invoice), quote state polling, and token issuance upon payment confirmation.",
+        "feature_name": "NUT-04: Minting Tokens (Deposit)",
+        "effort": "high"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "NUT-05: No melting flow exists. POST /v1/melt/quote/bolt11 and POST /v1/melt/bolt11 are absent. Users cannot redeem ecash for Bitcoin via Lightning.",
+        "recommendation": "Implement melt quote creation (get fee estimate), proof verification, Lightning payment execution, and change issuance.",
+        "feature_name": "NUT-05: Melting Tokens (Withdrawal)",
+        "effort": "high"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "NUT-06: No mint info endpoint exists. GET /v1/info is absent. Wallets cannot discover the mint's capabilities, supported NUTs, or contact info.",
+        "recommendation": "Implement GET /v1/info returning mint name, version, pubkey, supported NUTs, payment methods, and contact details.",
+        "feature_name": "NUT-06: Mint Info Endpoint",
+        "effort": "low"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "No Lightning backend integration exists. The mint cannot create invoices, check payment status, or pay Lightning invoices — all of which are required for NUT-04 and NUT-05.",
+        "recommendation": "Implement a Lightning backend abstraction layer with at least one concrete implementation (LND via gRPC/REST, CLN via REST, or LNbits). Use an interface/trait so backends are swappable.",
+        "feature_name": "Lightning Backend Integration",
+        "effort": "high"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "No database layer exists. The mint has no persistence for keysets, spent proofs, mint/melt quotes, or pending operations. Without this, double-spend prevention is impossible.",
+        "recommendation": "Implement a database layer (SQLite for development, PostgreSQL for production) with tables for: keysets, proofs (spent tokens), mint_quotes, melt_quotes. Use migrations.",
+        "feature_name": "Database / Persistence Layer",
+        "effort": "high"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "No double-spend prevention exists. The mint must track all spent proofs (by their Y-coordinate or secret hash) and reject reuse. Without this, the entire ecash system is exploitable.",
+        "recommendation": "Implement a spent-proofs store with atomic check-and-mark operations to prevent TOCTOU race conditions during token swaps and melts.",
+        "feature_name": "Double-Spend Prevention",
+        "effort": "medium"
+      },
+      {
+        "severity": "critical",
+        "category": "feature-missing",
+        "description": "No REST API server exists. There is no HTTP server, routing, or request/response handling. None of the NUT endpoints can be served.",
+        "recommendation": "Bootstrap an HTTP server with routing. Choose a web framework appropriate to the target language. Implement standard JSON request/response handling and error codes per NUT specifications.",
+        "feature_name": "REST API Server",
+        "effort": "medium"
+      },
+      {
+        "severity": "high",
+        "category": "feature-missing",
+        "description": "NUT-07: No token state check endpoint. GET /v1/checkstate is absent. Wallets cannot verify if their tokens are still spendable without this endpoint.",
+        "recommendation": "Implement POST /v1/checkstate that accepts a list of Y values and returns spent/unspent/pending status for each.",
+        "feature_name": "NUT-07: Token State Check",
+        "effort": "low"
+      },
+      {
+        "severity": "high",
+        "category": "feature-missing",
+        "description": "NUT-08: No overpaid Lightning fee handling. When a Lightning payment costs less than quoted, the user should receive change tokens. This is missing.",
+        "recommendation": "Implement fee return logic in the melt flow: if actual_fee < quoted_fee, issue change proofs for the difference.",
+        "feature_name": "NUT-08: Overpaid Lightning Fees",
+        "effort": "medium"
+      },
+      {
+        "severity": "high",
+        "category": "feature-missing",
+        "description": "NUT-12: No DLEQ proofs. Wallets cannot perform offline verification of mint signatures without Discrete Log Equality proofs in mint responses.",
+        "recommendation": "Extend blind signature responses to include DLEQ proofs so wallets can verify signature correctness without trusting the mint.",
+        "feature_name": "NUT-12: DLEQ Proofs (Offline Verification)",
+        "effort": "medium"
+      },
+      {
+        "severity": "high",
+        "category": "feature-missing",
+        "description": "NUT-17: No WebSocket subscription support. Real-time quote status updates (mint/melt payment confirmations) require WebSocket subscriptions.",
+        "recommendation": "Implement WebSocket endpoint with subscription model for quote state change events (UNPAID → PAID → ISSUED).",
+        "feature_name": "NUT-17: WebSocket Subscriptions",
+        "effort": "high"
+      },
+      {
+        "severity": "medium",
+        "category": "feature-missing",
+        "description": "NUT-09: No signature restore endpoint. POST /v1/restore is absent. Wallets cannot recover lost tokens by replaying blinded messages.",
+        "recommendation": "Implement POST /v1/restore that re-signs previously signed blinded messages, enabling wallet recovery flows.",
+        "feature_name": "NUT-09: Signature Restore",
+        "effort": "medium"
+      },
+      {
+        "severity": "medium",
+        "category": "feature-missing",
+        "description": "NUT-10/NUT-11: No spending conditions or P2PK support. Advanced token locking (Pay-to-Pubkey, HTLC) is entirely absent.",
+        "recommendation": "Implement spending condition parsing and verification in the proof validation logic. Start with P2PK as it enables multi-party payment flows.",
+        "feature_name": "NUT-10/11: Spending Conditions & P2PK",
+        "effort": "high"
+      },
+      {
+        "severity": "medium",
+        "category": "feature-missing",
+        "description": "NUT-13: No deterministic secret derivation. Without BIP-32-style deterministic secrets, wallet recovery from seed phrase is impossible.",
+        "recommendation": "Implement deterministic secret derivation spec so wallets built on top can support seed-based recovery.",
+        "feature_name": "NUT-13: Deterministic Secrets",
+        "effort": "medium"
+      },
+      {
+        "severity": "medium",
+        "category": "feature-missing",
+        "description": "NUT-23: No explicit BOLT11 payment method declaration. The mint must advertise supported payment methods in its info endpoint and quote responses.",
+        "recommendation": "Ensure NUT-06 info response includes payment_methods array with bolt11 support, and quote endpoints are tagged with method=bolt11.",
+        "feature_name": "NUT-23: Payment Method BOLT11",
+        "effort": "low"
+      },
+      {
+        "severity": "medium",
+        "category": "feature-missing",
+        "description": "No configuration system exists. Mint operators need to configure Lightning backend credentials, database connection, fee rates, keyset settings, and rate limits.",
+        "recommendation": "Implement a configuration layer (environment variables + config file). Include: LIGHTNING_BACKEND, DATABASE_URL, MINT_PRIVATE_KEY, INPUT_FEE_PPK, MAX_ORDER.",
+        "feature_name": "Operator Configuration System",
+        "effort": "medium"
+      },
+      {
+        "severity": "medium",
+        "category": "feature-missing",
+        "description": "No quote expiry management. Mint and melt quotes must expire after a configurable TTL. No quote state machine or cleanup job exists.",
+        "recommendation": "Implement quote state machine (UNPAID/PAID/ISSUED/EXPIRED) with background TTL enforcement and periodic cleanup of expired quotes.",
+        "feature_name": "Quote Expiry & State Machine",
+        "effort": "medium"
+      },
+      {
+        "severity": "low",
+        "category": "feature-untested",
+        "description": "No test suite exists of any kind. No unit tests for cryptographic primitives, no integration tests for API endpoints, no E2E tests for mint/melt flows.",
+        "recommendation": "Build a test suite in parallel with implementation. Prioritize: (1) BDHKE crypto unit tests with known vectors, (2) swap/mint/melt endpoint integration tests, (3) double-spend attack E2E tests.",
+        "feature_name": "Test Suite",
+        "effort": "high"
+      },
+      {
+        "severity": "low",
+        "category": "feature-missing",
+        "description": "No admin or monitoring interface. Production mints need balance tracking, fee revenue reporting, keyset rotation tools, and health checks.",
+        "recommendation": "Implement at minimum: GET /health endpoint, metrics export (Prometheus-compatible), and CLI tools for keyset management.",
+        "feature_name": "Admin & Monitoring",
+        "effort": "medium"
+      },
+      {
+        "severity": "low",
+        "category": "feature-missing",
+        "description": "No documentation or OpenAPI spec. The mint API should have a machine-readable spec and operator setup guide.",
+        "recommendation": "Generate OpenAPI 3.0 spec from route definitions. Write a README covering setup, configuration, and Lightning backend integration.",
+        "feature_name": "Documentation & API Spec",
+        "effort": "low"
+      }
+    ],
+    "summary": "The cashu-mint project is a completely empty greenfield directory containing zero source code, zero configuration files, and zero documentation. Not a single feature of the Cashu protocol mint has been implemented. All 7 mandatory NUTs (NUT-00 through NUT-06) are absent, as are all 9 surveyed optional NUTs. The foundational infrastructure — cryptographic engine, database layer, REST API server, Lightning backend integration, and double-spend prevention — does not exist. Feature coverage is 0%. The project requires complete implementation from scratch. The Cashu protocol is well-specified (see https://cashubtc.github.io/nuts/) and reference implementations exist in Python (Nutshell), Rust (CDK/Moksha), Go (gonuts), and TypeScript, which can serve as authoritative references during development. The minimum viable mint requires NUT-00 through NUT-06 plus Lightning integration and a persistence layer — approximately 8 critical features that must be built before the mint is functional."
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "success": true,
+  "next_box": "CONDUCTOR",
+  "context": {
+    "task_files": [
+      "C:\\code\\cashu-mint\\.overnight\\active\\001-P0-bootstrap-project-tech-stack.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\002-P0-implement-bdhke-crypto-engine.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\003-P0-implement-database-persistence-layer.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\004-P0-bootstrap-rest-api-server.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\005-P0-implement-keyset-management-nut01-nut02.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\006-P0-implement-double-spend-prevention.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\007-P0-implement-token-swap-nut03.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\008-P0-implement-lightning-backend.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\009-P0-implement-minting-flow-nut04.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\010-P0-implement-melting-flow-nut05.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\011-P0-implement-mint-info-endpoint-nut06.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\012-P1-implement-operator-config-system.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\013-P1-implement-quote-expiry-state-machine.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\014-P1-implement-token-state-check-nut07.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\015-P1-implement-fee-return-nut08.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\016-P1-implement-dleq-proofs-nut12.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\017-P1-implement-websocket-subscriptions-nut17.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\018-P2-implement-signature-restore-nut09.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\019-P2-implement-spending-conditions-nut10-nut11.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\020-P2-implement-deterministic-secrets-nut13.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\021-P2-implement-bolt11-payment-method-nut23.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\022-P2-implement-test-suite.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\023-P2-implement-admin-monitoring.md",
+      "C:\\code\\cashu-mint\\.overnight\\active\\024-P3-write-documentation-openapi-spec.md"
+    ],
+    "task_count": 24,
+    "tasks_by_priority": {
+      "P0": 11,
+      "P1": 6,
+      "P2": 6,
+      "P3": 1
+    },
+    "sources": {
+      "feature_audit": 24,
+      "gap_analyzer": 24,
+      "conductor_synthesis": 1,
+      "project_declared": 0
+    },
+    "review_summary": {
+      "total_findings": 24,
+      "accepted": 24,
+      "rejected": 0,
+      "deferred": 0,
+      "split": 0,
+      "merged": 2,
+      "notes": "All findings verified real — project is 100% greenfield (0 lines of source code). NUT-01 and NUT-02 merged into single task (005) as they share the same data model. Task 001 (bootstrap) added from conductor synthesis instructions as prerequisite for all other work."
+    },
+    "task_groups": {
+      "infrastructure": {
+        "tasks": [
+          "001-P0-bootstrap-project-tech-stack.md",
+          "003-P0-implement-database-persistence-layer.md",
+          "004-P0-bootstrap-rest-api-server.md",
+          "012-P1-implement-operator-config-system.md",
+          "023-P2-implement-admin-monitoring.md"
+        ],
+        "execution_hint": "sequential",
+        "reason": "Bootstrap must complete first; database and server share config; admin builds on all infra"
+      },
+      "core_crypto": {
+        "tasks": [
+          "002-P0-implement-bdhke-crypto-engine.md",
+          "016-P1-implement-dleq-proofs-nut12.md",
+          "019-P2-implement-spending-conditions-nut10-nut11.md",
+          "020-P2-implement-deterministic-secrets-nut13.md"
+        ],
+        "execution_hint": "sequential",
+        "reason": "DLEQ and spending conditions extend the BDHKE engine; deterministic secrets depend on hash_to_curve"
+      },
+      "keyset_management": {
+        "tasks": [
+          "005-P0-implement-keyset-management-nut01-nut02.md"
+        ],
+        "execution_hint": "sequential",
+        "reason": "Depends on BDHKE and database; required by all token operations"
+      },
+      "token_lifecycle": {
+        "tasks": [
+          "006-P0-implement-double-spend-prevention.md",
+          "007-P0-implement-token-swap-nut03.md",
+          "009-P0-implement-minting-flow-nut04.md",
+          "010-P0-implement-melting-flow-nut05.md",
+          "013-P1-implement-quote-expiry-state-machine.md",
+          "014-P1-implement-token-state-check-nut07.md",
+          "015-P1-implement-fee-return-nut08.md",
+          "018-P2-implement-signature-restore-nut09.md"
+        ],
+        "execution_hint": "sequential",
+        "reason": "Double-spend prevention is shared by swap/mint/melt; quote expiry and fee return extend existing flows"
+      },
+      "lightning_integration": {
+        "tasks": [
+          "008-P0-implement-lightning-backend.md"
+        ],
+        "execution_hint": "sequential",
+        "reason": "Lightning backend is a prerequisite for NUT-04 mint and NUT-05 melt flows"
+      },
+      "protocol_extensions": {
+        "tasks": [
+          "011-P0-implement-mint-info-endpoint-nut06.md",
+          "017-P1-implement-websocket-subscriptions-nut17.md",
+          "021-P2-implement-bolt11-payment-method-nut23.md"
+        ],
+        "execution_hint": "sequential",
+        "reason": "Info endpoint is foundational; WebSocket and NUT-23 extend it with more capabilities"
+      },
+      "quality": {
+        "tasks": [
+          "022-P2-implement-test-suite.md",
+          "024-P3-write-documentation-openapi-spec.md"
+        ],
+        "execution_hint": "parallel",
+        "reason": "Tests and docs are independent — can be written in any order"
+      }
+    },
+    "recommended_mode": "managed",
+    "recommended_lanes": 3,
+    "recommended_build_order": [
+      "001: Bootstrap project (prerequisite for everything)",
+      "002: BDHKE crypto engine (prerequisite for all token ops)",
+      "003: Database layer (prerequisite for all state)",
+      "004: REST API server (prerequisite for all endpoints)",
+      "005: Keyset management NUT-01/02 (needs 002 + 003)",
+      "006: Double-spend prevention (needs 003)",
+      "007: Token swap NUT-03 (needs 002 + 005 + 006)",
+      "008: Lightning backend (needs 001)",
+      "009: Minting flow NUT-04 (needs 002 + 005 + 008)",
+      "010: Melting flow NUT-05 (needs 002 + 006 + 008)",
+      "011: Mint info NUT-06 (needs 004, mostly independent)",
+      "012: Config system (can be done early, parallel with 001)",
+      "013: Quote expiry (needs 003 + 009 + 010)",
+      "014: Token state check NUT-07 (needs 006)",
+      "015: Fee return NUT-08 (needs 010)",
+      "016: DLEQ proofs NUT-12 (needs 002)",
+      "017: WebSocket NUT-17 (needs 009 + 010)",
+      "018-024: P2/P3 tasks (after P0/P1 complete)"
+    ]
+  }
+}

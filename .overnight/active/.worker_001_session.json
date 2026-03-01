@@ -1,0 +1,10 @@
+{
+  "tasks": [
+    "001-P0-bootstrap-project-tech-stack.md",
+    "003-P0-implement-database-persistence-layer.md",
+    "004-P0-bootstrap-rest-api-server.md",
+    "012-P1-implement-operator-config-system.md",
+    "023-P2-implement-admin-monitoring.md"
+  ],
+  "group": "infrastructure"
+}

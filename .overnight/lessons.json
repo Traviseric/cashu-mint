@@ -1,0 +1,5 @@
+{
+  "rejected_findings": [],
+  "unproductive_audits": [],
+  "notes": "First run — no rejections. All 24 findings accepted as genuine: project has 0% implementation coverage (greenfield). No false positives possible when the entire codebase is empty."
+}

@@ -1,0 +1,92 @@
+{
+  "success": true,
+  "next_box": "CONDUCTOR",
+  "context": {
+    "project_type": "api",
+    "project_type_detail": "Cashu ecash protocol mint — a backend service that issues and redeems Chaumian blinded ecash tokens backed by Bitcoin Lightning. No code exists yet; this is a greenfield cold-start project.",
+    "tech_stack": {
+      "languages": [],
+      "frameworks": [],
+      "build_tools": [],
+      "test_framework": null,
+      "package_manager": null,
+      "notes": "No source code, no dependency manifests, no config files exist. The project directory contains ONLY .overnight system files. Technology stack is entirely undetermined — the user has not yet chosen a language or framework."
+    },
+    "structure": {
+      "entry_points": [],
+      "key_directories": [],
+      "config_files": [],
+      "notes": "Project directory is completely empty of source code. Only .overnight/ workflow orchestration files exist."
+    },
+    "build_command": null,
+    "test_command": null,
+    "documentation": {
+      "has_readme": false,
+      "has_claude_md": false,
+      "has_api_docs": false,
+      "planning_docs": [],
+      "notes": "No documentation exists. No README, no CLAUDE.md, no API docs, no planning docs."
+    },
+    "coding_conventions": {
+      "naming_style": "undetermined — no source code exists",
+      "error_handling": "undetermined",
+      "import_style": "undetermined",
+      "test_framework": "undetermined",
+      "test_location": "undetermined",
+      "key_utilities": []
+    },
+    "current_state": {
+      "working": [],
+      "broken": [],
+      "incomplete": ["entire project — no code has been written"],
+      "test_coverage": "none"
+    },
+    "cashu_protocol_context": {
+      "what_is_cashu": "Cashu is an open-source ecash protocol based on David Wagner's variant of Chaumian blinding. It enables privacy-preserving digital cash transactions backed by Bitcoin. The system has two components: a mint (server) that issues/redeems ecash, and wallets (clients) that hold/transfer ecash.",
+      "what_is_a_mint": "The mint is the server-side component that: (1) accepts Bitcoin deposits via Lightning, (2) issues blinded ecash tokens using Chaumian blind signatures, (3) validates and redeems tokens when users want to swap or cash out, (4) manages keysets and cryptographic keys, (5) tracks spent tokens to prevent double-spending.",
+      "mandatory_nuts": [
+        "NUT-00: Cryptography and Models — foundational cryptographic protocols (Blind Diffie-Hellman Key Exchange)",
+        "NUT-01: Mint public keys — public key management endpoints",
+        "NUT-02: Keysets and fees — keyset operations and fee structures",
+        "NUT-03: Swapping tokens — token exchange/split mechanisms",
+        "NUT-04: Minting tokens — token creation (deposit Bitcoin, receive ecash)",
+        "NUT-05: Melting tokens — token redemption (redeem ecash, receive Bitcoin via Lightning)",
+        "NUT-06: Mint info — mint information/discovery endpoint"
+      ],
+      "important_optional_nuts": [
+        "NUT-07: Token state check (check if tokens are spent)",
+        "NUT-08: Overpaid Lightning fees (return excess)",
+        "NUT-09: Signature restore",
+        "NUT-10: Spending conditions",
+        "NUT-11: Pay-To-Pubkey (P2PK)",
+        "NUT-12: DLEQ proofs (offline verification)",
+        "NUT-13: Deterministic secrets",
+        "NUT-17: WebSocket subscriptions",
+        "NUT-23: Payment Method: BOLT11 (Lightning)"
+      ],
+      "existing_implementations": {
+        "python": "cashubtc/nutshell — reference implementation (Python, SQLite/PostgreSQL, LND/CLN backends)",
+        "rust": "cashubtc/cdk — Cashu Dev Kit (Rust library), ngutech21/moksha (Rust mint+wallet)",
+        "go": "elnosh/gonuts (Go mint+wallet), cashubtc/cashu-feni (Go)",
+        "typescript": "cashubtc/cashu-ts (wallet library), gandlafbtc/cashu-ts-mint (mint)",
+        "csharp": "Kukks/DotNut (C# client library, not a full mint)",
+        "java": "398ja/cashu-mint (Java/Spring Boot mint)",
+        "elixir": "starkware-bitcoin/cashubrew (Elixir mint)",
+        "swift": "SparrowTek/swift-cashu-mint"
+      },
+      "core_mint_components": [
+        "Cryptographic engine: Blind Diffie-Hellman Key Exchange (BDHKE) for blind signatures",
+        "Keyset management: Generate, rotate, and serve signing keypairs",
+        "Token lifecycle: Mint (issue), swap (split/merge), melt (redeem) operations",
+        "Proof verification: Validate blinded messages, verify spent status, prevent double-spend",
+        "Lightning backend integration: Connect to LND/CLN/other Lightning node for deposits/withdrawals",
+        "Database: Store keysets, proofs (spent tokens), mint/melt quotes, pending operations",
+        "REST API: HTTP endpoints per NUT specifications",
+        "Quote system: Mint quotes (for deposits) and melt quotes (for withdrawals) with expiry"
+      ],
+      "specifications_url": "https://cashubtc.github.io/nuts/",
+      "protocol_repo": "https://github.com/cashubtc/nuts"
+    },
+    "summary": "cashu-mint is a completely empty greenfield project — no source code, configuration, or documentation exists. Based on the project name, it is intended to be a Cashu protocol mint implementation: a backend API service that issues and redeems Chaumian blinded ecash tokens backed by Bitcoin Lightning. The project needs to be built from scratch. The Cashu protocol has 7 mandatory NUT specifications (NUT-00 through NUT-06) that any mint must implement, plus 22 optional NUTs. Reference implementations exist in Python (Nutshell), Rust (CDK), Go, TypeScript, Java, and other languages."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tasks": [
+    "002-P0-implement-bdhke-crypto-engine.md",
+    "016-P1-implement-dleq-proofs-nut12.md",
+    "019-P2-implement-spending-conditions-nut10-nut11.md",
+    "020-P2-implement-deterministic-secrets-nut13.md"
+  ],
+  "group": "core_crypto"
+}
