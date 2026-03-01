@@ -54,6 +54,12 @@ export async function isSecretSpent(secret: string): Promise<boolean> {
 	return proof !== null;
 }
 
+/** Check if a proof Y-point is locked as PENDING (in-flight melt payment) */
+export async function isPending(y: string): Promise<boolean> {
+	const proof = await prisma.pendingProof.findUnique({ where: { y } });
+	return proof !== null;
+}
+
 /** Check which secrets from a list are already spent */
 export async function getSpentSecrets(secrets: string[]): Promise<Set<string>> {
 	const spent = await prisma.spentProof.findMany({

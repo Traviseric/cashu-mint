@@ -287,6 +287,40 @@ describe('MintService', () => {
 			expect(result.states[0].state).toBe('UNSPENT');
 		});
 
+		itDb('checkProofState: proof in PendingProof (in-flight melt) returns PENDING', async () => {
+			const { hashToCurveString: h2c } = await import('../../core/crypto/bdhke.js');
+			const { lockProofsAsPending, releasePendingProofs, isPending } = await import(
+				'../../db/repository.js'
+			);
+
+			const secret = 'pending_state_check_secret';
+			const Y = h2c(secret);
+			const fakeMeltQuoteId = 'test-melt-quote-pending-nut07';
+
+			// Simulate in-flight melt by locking the proof as PENDING
+			await lockProofsAsPending(
+				[{ secret, y: Y, amount: 1, keysetId, c: '02' + '00'.repeat(32) }],
+				fakeMeltQuoteId,
+			);
+
+			try {
+				// isPending helper must confirm lock
+				expect(await isPending(Y)).toBe(true);
+
+				// checkProofState must surface PENDING (not UNSPENT)
+				const result = await service.checkProofState([Y]);
+				expect(result.states).toHaveLength(1);
+				expect(result.states[0].state).toBe('PENDING');
+			} finally {
+				// Always release the lock so it doesn't pollute other tests
+				await releasePendingProofs(fakeMeltQuoteId);
+			}
+
+			// After release the proof is back to UNSPENT
+			const afterRelease = await service.checkProofState([Y]);
+			expect(afterRelease.states[0].state).toBe('UNSPENT');
+		});
+
 		itDb('melt: payment failure releases pending proofs (proofs remain spendable)', async () => {
 			// 1. Mint tokens
 			const mintQuote = await service.createMintQuote(16, 'sat');
