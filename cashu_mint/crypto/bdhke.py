@@ -141,10 +141,35 @@ def verify(secret: bytes, C_bytes: bytes, k: int) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# High-level helpers used by keyset management
+# High-level helpers
 # ---------------------------------------------------------------------------
 
 
 def privkey_to_pubkey_bytes(k: int) -> bytes:
     """Return the 33-byte compressed public key for a private key scalar."""
     return point_to_bytes(privkey_to_pubkey(k))
+
+
+def sign_blinded_with_dleq(
+    B_prime_bytes: bytes,
+    k: int,
+) -> tuple[bytes, dict[str, str]]:
+    """Sign a blinded message and generate a DLEQ proof (NUT-12).
+
+    This is the function used by swap / mint / melt endpoints to produce a
+    ``BlindSignature`` with an embedded DLEQ proof.
+
+    Args:
+        B_prime_bytes:  33-byte blinded message from the wallet.
+        k:              Mint's private signing key scalar.
+
+    Returns:
+        ``(C_prime_bytes, dleq_proof)`` where ``dleq_proof`` is
+        ``{"e": hex, "s": hex}``.
+    """
+    # Import here to avoid circular dependency (dleq imports ec, bdhke imports ec)
+    from cashu_mint.crypto.dleq import generate_dleq_proof
+
+    C_prime_bytes = sign_blinded(B_prime_bytes, k)
+    dleq = generate_dleq_proof(B_prime_bytes, C_prime_bytes, k)
+    return C_prime_bytes, dleq
