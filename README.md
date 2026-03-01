@@ -10,14 +10,14 @@ The first production TypeScript/Node.js implementation of the [Cashu protocol](h
 
 | NUT | Name | Status |
 |-----|------|--------|
-| 00 | Cryptography & Models | Scaffolded |
-| 01 | Mint Public Keys | Scaffolded |
-| 02 | Keysets & Fees | Scaffolded |
-| 03 | Swap | Scaffolded |
-| 04 | Mint Tokens (bolt11) | Scaffolded |
-| 05 | Melt Tokens (bolt11) | Scaffolded |
-| 06 | Mint Info | Scaffolded |
-| 07 | Token State Check | Scaffolded |
+| 00 | Cryptography & Models | Implemented |
+| 01 | Mint Public Keys | Implemented |
+| 02 | Keysets & Fees | Implemented |
+| 03 | Swap | Implemented |
+| 04 | Mint Tokens (bolt11) | Implemented |
+| 05 | Melt Tokens (bolt11) | Implemented |
+| 06 | Mint Info | Implemented |
+| 07 | Token State Check | Implemented |
 
 ## Quick Start
 

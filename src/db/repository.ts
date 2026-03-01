@@ -21,6 +21,27 @@ export async function getKeysetById(id: string) {
 	return prisma.keyset.findUnique({ where: { id } });
 }
 
+/** Create a keyset record */
+export async function createKeyset(params: {
+	id: string;
+	unit: string;
+	active: boolean;
+}) {
+	return prisma.keyset.upsert({
+		where: { id: params.id },
+		update: { active: params.active },
+		create: { id: params.id, unit: params.unit, active: params.active },
+	});
+}
+
+/** Deactivate a keyset (rotation — old keyset stays redeemable but not issuable) */
+export async function deactivateKeyset(id: string) {
+	return prisma.keyset.update({
+		where: { id },
+		data: { active: false },
+	});
+}
+
 /** Check if a secret has already been spent */
 export async function isSecretSpent(secret: string): Promise<boolean> {
 	const proof = await prisma.spentProof.findUnique({ where: { secret } });
@@ -42,8 +63,21 @@ export async function getSpentSecrets(secrets: string[]): Promise<Set<string>> {
  * This is the core atomic operation for swap/mint/melt.
  */
 export async function spendProofsAndSignAtomically(
-	proofs: Array<{ secret: string; amount: number; keysetId: string; c: string; witness?: unknown }>,
-	signatures: Array<{ amount: number; c_: string; keysetId: string; quoteId?: string }>,
+	proofs: Array<{
+		secret: string;
+		y: string;
+		amount: number;
+		keysetId: string;
+		c: string;
+		witness?: unknown;
+	}>,
+	signatures: Array<{
+		amount: number;
+		c_: string;
+		keysetId: string;
+		quoteId?: string;
+		b_?: string;
+	}>,
 ) {
 	return prisma.$transaction(
 		async (tx) => {
@@ -51,6 +85,7 @@ export async function spendProofsAndSignAtomically(
 			await tx.spentProof.createMany({
 				data: proofs.map((p) => ({
 					secret: p.secret,
+					y: p.y,
 					amount: p.amount,
 					keysetId: p.keysetId,
 					c: p.c,
@@ -65,6 +100,7 @@ export async function spendProofsAndSignAtomically(
 					c_: s.c_,
 					keysetId: s.keysetId,
 					quoteId: s.quoteId ?? null,
+					b_: s.b_ ?? null,
 				})),
 			});
 		},
@@ -72,6 +108,27 @@ export async function spendProofsAndSignAtomically(
 			isolationLevel: 'Serializable',
 		},
 	);
+}
+
+/** Store blind signatures without spending proofs (for mint tokens) */
+export async function storeBlindSignatures(
+	signatures: Array<{
+		amount: number;
+		c_: string;
+		keysetId: string;
+		quoteId?: string;
+		b_?: string;
+	}>,
+) {
+	return prisma.blindSignature.createMany({
+		data: signatures.map((s) => ({
+			amount: s.amount,
+			c_: s.c_,
+			keysetId: s.keysetId,
+			quoteId: s.quoteId ?? null,
+			b_: s.b_ ?? null,
+		})),
+	});
 }
 
 /** Create a mint quote (NUT-04) */
@@ -102,6 +159,7 @@ export async function createMeltQuote(params: {
 	amount: number;
 	unit: string;
 	expiry: Date;
+	feeReserve?: number;
 }) {
 	return prisma.pendingQuote.create({
 		data: {
@@ -129,12 +187,35 @@ export async function updateQuoteState(id: string, state: PrismaQuoteState) {
 	});
 }
 
-/** Get blind signatures by quote ID (saga recovery) */
+/** Get blind signatures by quote ID (saga recovery for mint) */
 export async function getBlindSignaturesByQuoteId(quoteId: string) {
 	return prisma.blindSignature.findMany({ where: { quoteId } });
 }
 
-/** Get proof states for checkstate (NUT-07) */
+/** Get blind signatures by B_ values (saga recovery for swap) */
+export async function getBlindSignaturesByB_(bPrimes: string[]) {
+	return prisma.blindSignature.findMany({
+		where: { b_: { in: bPrimes } },
+	});
+}
+
+/** Get proof states by Y values for NUT-07 checkstate */
+export async function getProofStatesByY(
+	ys: string[],
+): Promise<Map<string, 'SPENT'>> {
+	const spent = await prisma.spentProof.findMany({
+		where: { y: { in: ys } },
+		select: { y: true },
+	});
+
+	const stateMap = new Map<string, 'SPENT'>();
+	for (const s of spent) {
+		stateMap.set(s.y, 'SPENT');
+	}
+	return stateMap;
+}
+
+/** Get proof states for checkstate (NUT-07) — by secret */
 export async function getProofStates(secrets: string[]): Promise<Map<string, 'SPENT' | 'PENDING'>> {
 	const spent = await prisma.spentProof.findMany({
 		where: { secret: { in: secrets } },

@@ -36,6 +36,7 @@ model Keyset {
 
 model SpentProof {
   secret   String @id
+  y        String @unique @map("y_point")
   amount   Int
   keysetId String @map("keyset_id")
   c        String
@@ -54,12 +55,14 @@ model BlindSignature {
   c_       String @map("c_prime")
   keysetId String @map("keyset_id")
   quoteId  String? @map("quote_id")
+  b_       String? @map("b_prime")
 
   keyset Keyset @relation(fields: [keysetId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
 
   @@index([quoteId])
+  @@index([b_])
   @@map("blind_signatures")
 }
 

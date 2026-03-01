@@ -41,6 +41,9 @@ async function main() {
 	const mintService = new MintService(config, lightning);
 	fastify.decorate('mintService', mintService);
 
+	// Initialize mint (derive keysets, upsert in DB)
+	await mintService.init();
+
 	// Register routes
 	await registerRoutes(fastify);
 

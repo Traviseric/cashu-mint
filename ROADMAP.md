@@ -4,14 +4,14 @@
 
 Foundation for a working mint that can issue, swap, and melt ecash tokens.
 
-- [ ] NUT-00: BDHKE crypto (hash_to_curve, blind/sign/verify with @noble/curves)
-- [ ] NUT-01: Keyset derivation from seed, `GET /v1/keys`
-- [ ] NUT-02: Keyset management + rotation, `GET /v1/keysets`
-- [ ] NUT-03: Swap — double-spend check, atomic spend+sign, saga recovery
-- [ ] NUT-04: Mint tokens — Lightning invoice generation, quote state machine, blind signing on settlement
-- [ ] NUT-05: Melt tokens — fee estimation, pending proof hold, LN payment, burn on success
-- [ ] NUT-06: Mint info endpoint
-- [ ] NUT-07: Token state check (`POST /v1/checkstate`)
+- [x] NUT-00: BDHKE crypto (hash_to_curve, blind/sign/verify with @noble/curves)
+- [x] NUT-01: Keyset derivation from seed, `GET /v1/keys`
+- [x] NUT-02: Keyset management + rotation, `GET /v1/keysets`
+- [x] NUT-03: Swap — double-spend check, atomic spend+sign, saga recovery
+- [x] NUT-04: Mint tokens — Lightning invoice generation, quote state machine, blind signing on settlement
+- [x] NUT-05: Melt tokens — fee estimation, pending proof hold, LN payment, burn on success
+- [x] NUT-06: Mint info endpoint
+- [x] NUT-07: Token state check (`POST /v1/checkstate`)
 - [ ] LND gRPC backend (production Lightning)
 - [ ] Integration tests against cashu-ts client
 
@@ -68,7 +68,7 @@ Full spec: `../internal/docs/projects/programmable-ecash.md`
 
 | This Phase | Needs | Status |
 |---|---|---|
-| Phase 1-3 | Standalone — no external dependencies | In progress |
+| Phase 1-3 | Standalone — no external dependencies | Phase 1 complete |
 | Phase 2 (NUT-12 DLEQ) | Enables `@te-btc/cashu-l402` offline verification | Parallel |
 | Phase 4 (PoS) | `@te-btc/cashu-l402` for bridge-side PoS flow | Scaffolded |
 | Phase 4 (PoS) | `@te-btc/agent-wallet` for agent-side token generation | Planned |
