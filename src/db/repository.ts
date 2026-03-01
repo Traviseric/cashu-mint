@@ -351,17 +351,3 @@ export async function burnPendingProofs(
 export async function releasePendingProofs(meltQuoteId: string) {
 	return prisma.pendingProof.deleteMany({ where: { meltQuoteId } });
 }
-
-/** Get proof states for checkstate (NUT-07) — by secret */
-export async function getProofStates(secrets: string[]): Promise<Map<string, 'SPENT' | 'PENDING'>> {
-	const spent = await prisma.spentProof.findMany({
-		where: { secret: { in: secrets } },
-		select: { secret: true },
-	});
-
-	const stateMap = new Map<string, 'SPENT' | 'PENDING'>();
-	for (const s of spent) {
-		stateMap.set(s.secret, 'SPENT');
-	}
-	return stateMap;
-}
