@@ -8,7 +8,6 @@ import { randomBytes } from 'node:crypto';
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { bytesToHex } from '@noble/hashes/utils';
 import type { ILightningBackend } from '../lightning/interface.js';
-import type { FakeWallet } from '../lightning/fake-wallet.js';
 import {
 	hashToCurveString,
 	signBlindedMessage,
@@ -20,7 +19,6 @@ import {
 	serializeKeys,
 } from '../core/crypto/keyset.js';
 import {
-	DENOMINATIONS,
 	DEFAULT_QUOTE_TTL,
 	MINT_VERSION,
 	SUPPORTED_NUTS,
@@ -245,6 +243,7 @@ export class MintService {
 			amount,
 			unit,
 			expiry,
+			paymentHash: invoice.paymentHash,
 		});
 
 		return {
@@ -262,7 +261,7 @@ export class MintService {
 			throw new QuoteNotFoundError();
 		}
 
-		// Check expiry
+		// Transition expired quotes — state is otherwise authoritative from DB
 		if (quote.state === 'UNPAID' && new Date() > quote.expiry) {
 			await repo.updateQuoteState(quoteId, 'EXPIRED');
 			return {
@@ -273,27 +272,22 @@ export class MintService {
 			};
 		}
 
-		// For FakeWallet, check if invoice has been settled
-		let state = quote.state as string;
-		if (
-			state === 'UNPAID' &&
-			'isSettled' in this.lightning
-		) {
-			const wallet = this.lightning as FakeWallet;
-			// Extract payment hash from bolt11 for FakeWallet
-			const paymentHash = this.extractPaymentHash(quote.request);
-			if (paymentHash && wallet.isSettled(paymentHash)) {
-				await repo.updateQuoteState(quoteId, 'PAID');
-				state = 'PAID';
-			}
-		}
-
 		return {
 			quote: quote.id,
 			request: quote.request,
-			state: state as MintQuoteResponse['state'],
+			state: quote.state as MintQuoteResponse['state'],
 			expiry: Math.floor(quote.expiry.getTime() / 1000),
 		};
+	}
+
+	/**
+	 * Called by the invoice subscription loop when a Lightning invoice is settled.
+	 * Transitions the corresponding mint quote from UNPAID → PAID in the DB.
+	 */
+	async handleInvoiceSettled(paymentHash: string): Promise<void> {
+		const quote = await repo.getMintQuoteByPaymentHash(paymentHash);
+		if (!quote || quote.state !== 'UNPAID') return;
+		await repo.updateQuoteState(quote.id, 'PAID');
 	}
 
 	/** POST /v1/mint/bolt11 — mint tokens */
@@ -317,18 +311,7 @@ export class MintService {
 			return this.recoverMintSaga(quoteId);
 		}
 
-		// For FakeWallet: check settlement
-		let state = quote.state;
-		if (state === 'UNPAID' && 'isSettled' in this.lightning) {
-			const wallet = this.lightning as FakeWallet;
-			const paymentHash = this.extractPaymentHash(quote.request);
-			if (paymentHash && wallet.isSettled(paymentHash)) {
-				await repo.updateQuoteState(quoteId, 'PAID');
-				state = 'PAID';
-			}
-		}
-
-		if (state !== 'PAID') {
+		if (quote.state !== 'PAID') {
 			throw new QuoteNotPaidError();
 		}
 
@@ -398,12 +381,10 @@ export class MintService {
 			throw new QuoteNotFoundError();
 		}
 
-		const fee = await this.lightning.estimateFee(quote.request);
-
 		return {
 			quote: quote.id,
 			amount: quote.amount,
-			fee_reserve: fee,
+			fee_reserve: quote.feeReserve,
 			state: quote.state as MeltQuoteResponse['state'],
 			expiry: Math.floor(quote.expiry.getTime() / 1000),
 		};
@@ -708,29 +689,6 @@ export class MintService {
 		return { signatures };
 	}
 
-	/** Extract payment hash from a FakeWallet bolt11 */
-	private extractPaymentHash(bolt11: string): string | null {
-		// FakeWallet format: lnbc{amount}n1fake{hash20chars}
-		const match = bolt11.match(/^lnbc\d+n1fake(.+)$/);
-		if (!match) return null;
-		// The FakeWallet stores payment hash as full 64-char hex in its map,
-		// but the bolt11 only has first 20 chars. We need to check the wallet's map.
-		// Since FakeWallet tracks by full hash, we need to iterate.
-		// Actually, let's check if the wallet has this invoice by trying known hashes.
-		// Better approach: store payment hash in the quote or use wallet's internal map.
-		// For now, use a workaround: check all invoices in FakeWallet
-		if ('hasInvoice' in this.lightning) {
-			const wallet = this.lightning as FakeWallet;
-			// We can't directly get the hash from bolt11 in FakeWallet.
-			// The decodePayReq returns a hash derived from bolt11 suffix.
-			// Let's use the same logic as decodePayReq
-			const hashFromBolt11 = bolt11.slice(-20).padEnd(64, '0');
-			if (wallet.hasInvoice(hashFromBolt11)) {
-				return hashFromBolt11;
-			}
-		}
-		return null;
-	}
 }
 
 /** Check if a Prisma error is a unique constraint violation (P2002) */

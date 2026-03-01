@@ -91,6 +91,7 @@ model PendingQuote {
   state       QuoteState @default(UNPAID)
   type        QuoteType
   amount      Int
+  feeReserve  Int        @default(0) @map("fee_reserve")
   unit        String     @default("sat")
   expiry      DateTime
   paymentHash String?    @map("payment_hash")

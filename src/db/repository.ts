@@ -144,6 +144,7 @@ export async function createMintQuote(params: {
 	amount: number;
 	unit: string;
 	expiry: Date;
+	paymentHash?: string;
 }) {
 	return prisma.pendingQuote.create({
 		data: {
@@ -154,7 +155,15 @@ export async function createMintQuote(params: {
 			amount: params.amount,
 			unit: params.unit,
 			expiry: params.expiry,
+			paymentHash: params.paymentHash ?? null,
 		},
+	});
+}
+
+/** Get a mint quote by its Lightning payment hash (for subscription loop) */
+export async function getMintQuoteByPaymentHash(paymentHash: string) {
+	return prisma.pendingQuote.findFirst({
+		where: { paymentHash, type: 'MINT' },
 	});
 }
 
@@ -174,6 +183,7 @@ export async function createMeltQuote(params: {
 			state: 'UNPAID',
 			type: 'MELT',
 			amount: params.amount,
+			feeReserve: params.feeReserve ?? 0,
 			unit: params.unit,
 			expiry: params.expiry,
 		},
