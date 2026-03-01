@@ -15,6 +15,7 @@ import type {
 
 export class FakeWallet implements ILightningBackend {
 	private invoices = new Map<string, { amount: number; memo: string; settled: boolean }>();
+	private bolt11Map = new Map<string, string>(); // bolt11 → paymentHash
 	private updateListeners: Array<(update: InvoiceUpdate) => void> = [];
 	private _shouldFailPayment = false;
 
@@ -24,6 +25,7 @@ export class FakeWallet implements ILightningBackend {
 		const bolt11 = `lnbc${amount}n1fake${paymentHash.slice(0, 20)}`;
 
 		this.invoices.set(paymentHash, { amount, memo, settled: false });
+		this.bolt11Map.set(bolt11, paymentHash);
 
 		return { bolt11, paymentHash, amount };
 	}
@@ -54,8 +56,11 @@ export class FakeWallet implements ILightningBackend {
 		const amountMatch = bolt11.match(/^lnbc(\d+)n1/);
 		const amount = amountMatch ? Number.parseInt(amountMatch[1], 10) : 1000;
 
+		// Use stored bolt11→paymentHash mapping for accuracy; fall back to derived hash
+		const paymentHash = this.bolt11Map.get(bolt11) ?? bolt11.slice(-20).padEnd(64, '0');
+
 		return {
-			paymentHash: bolt11.slice(-20).padEnd(64, '0'),
+			paymentHash,
 			amount,
 			description: 'Fake invoice',
 			expiry: 3600,

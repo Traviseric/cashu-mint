@@ -1,0 +1,101 @@
+// Minimal LND lightning.proto — only RPCs and types used by LndBackend.
+// Extracted from https://github.com/lightningnetwork/lnd/blob/master/lnrpc/lightning.proto
+syntax = "proto3";
+
+package lnrpc;
+
+option go_package = "github.com/lightningnetwork/lnd/lnrpc";
+
+service Lightning {
+    rpc AddInvoice(Invoice) returns (AddInvoiceResponse);
+    rpc SubscribeInvoices(InvoiceSubscription) returns (stream Invoice);
+    rpc DecodePayReq(PayReqString) returns (PayReq);
+    rpc EstimateRouteFee(RouteFeeRequest) returns (RouteFeeResponse);
+    rpc SendPaymentSync(SendRequest) returns (SendResponse);
+}
+
+// ── Invoice ───────────────────────────────────────────────────────────────────
+
+message Invoice {
+    string memo = 1;
+    bytes  r_preimage = 3;
+    bytes  r_hash = 4;
+    int64  value = 5;
+    string payment_request = 6;
+    int64  creation_date = 10;
+    int64  settle_date = 11;
+    bool   settled = 13;
+    int64  expiry = 14;
+    int64  add_index = 16;
+    int64  settle_index = 17;
+    int64  amt_paid_sat = 19;
+
+    enum InvoiceState {
+        OPEN = 0;
+        SETTLED = 1;
+        CANCELED = 2;
+        ACCEPTED = 3;
+    }
+    InvoiceState state = 25;
+}
+
+message AddInvoiceResponse {
+    bytes  r_hash = 1;
+    string payment_request = 2;
+    int64  add_index = 16;
+    bytes  payment_addr = 3;
+}
+
+message InvoiceSubscription {
+    uint64 add_index = 1;
+    uint64 settle_index = 2;
+}
+
+// ── Pay-req decode ────────────────────────────────────────────────────────────
+
+message PayReqString {
+    string pay_req = 1;
+}
+
+message PayReq {
+    string destination  = 1;
+    string payment_hash = 2;
+    int64  num_satoshis = 3;
+    int64  timestamp    = 4;
+    int64  expiry       = 5;
+    string description  = 6;
+    int64  num_msat     = 10;
+}
+
+// ── Fee estimation ────────────────────────────────────────────────────────────
+
+message RouteFeeRequest {
+    bytes dest    = 1;
+    int64 amt_sat = 2;
+}
+
+message RouteFeeResponse {
+    int64 routing_fee_msat = 1;
+    int64 time_lock_delay  = 2;
+}
+
+// ── Send payment ──────────────────────────────────────────────────────────────
+
+message FeeLimit {
+    oneof limit {
+        int64 fixed       = 1;
+        int64 fixed_msat  = 3;
+        int64 percent     = 2;
+    }
+}
+
+message SendRequest {
+    string   payment_request = 6;
+    FeeLimit fee_limit       = 9;
+}
+
+message SendResponse {
+    string payment_error    = 1;
+    bytes  payment_preimage = 2;
+    bytes  payment_hash     = 4;
+}

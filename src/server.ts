@@ -2,13 +2,13 @@
  * Main entry point — bootstraps Fastify, registers routes, starts listening.
  */
 
-import Fastify from 'fastify';
+import Fastify, { type FastifyBaseLogger } from 'fastify';
 import { registerRoutes } from './routes/index.js';
 import { MintService } from './services/mint-service.js';
 import { createLightningBackend } from './lightning/index.js';
 import { loadConfig } from './utils/config.js';
-import { MINT_VERSION, SUPPORTED_NUTS } from './core/constants.js';
-import type { MintConfig } from './utils/config.js';
+import { MINT_VERSION } from './core/constants.js';
+import type { ILightningBackend } from './lightning/interface.js';
 import type { MintService as MintServiceType } from './services/mint-service.js';
 
 // Extend Fastify instance with mint service
@@ -44,6 +44,9 @@ async function main() {
 	// Initialize mint (derive keysets, upsert in DB)
 	await mintService.init();
 
+	// Start background invoice settlement detection loop (non-blocking)
+	startInvoiceSubscriptionLoop(mintService, lightning, fastify.log);
+
 	// Register routes
 	await registerRoutes(fastify);
 
@@ -69,3 +72,31 @@ async function main() {
 }
 
 main();
+
+/**
+ * Background loop: subscribes to Lightning invoice updates and marks mint quotes PAID.
+ * Automatically restarts on connection errors with a 5s backoff.
+ */
+function startInvoiceSubscriptionLoop(
+	mintService: MintServiceType,
+	lightning: ILightningBackend,
+	logger: FastifyBaseLogger,
+): void {
+	const loop = async () => {
+		try {
+			for await (const update of lightning.subscribeInvoices()) {
+				if (update.settled && update.paymentHash) {
+					await mintService.handleInvoiceSettled(update.paymentHash);
+				}
+			}
+		} catch (err) {
+			logger.error({ err }, 'Invoice subscription lost — restarting in 5s');
+			setTimeout(loop, 5000);
+		}
+	};
+
+	// Fire-and-forget: runs in background without blocking server startup
+	loop().catch((err) => {
+		logger.error({ err }, 'Invoice subscription loop failed to start');
+	});
+}

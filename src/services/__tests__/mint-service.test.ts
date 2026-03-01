@@ -38,6 +38,23 @@ function createTestConfig(): MintConfig {
  */
 const itDb = process.env.DATABASE_URL ? it : it.skip;
 
+/**
+ * Simulate invoice settlement:
+ * 1. Decode bolt11 to get the actual payment hash stored by FakeWallet
+ * 2. Mark invoice settled in FakeWallet (triggers subscription listeners)
+ * 3. Call handleInvoiceSettled to update DB state (mirrors subscription loop)
+ */
+async function simulateInvoicePaid(
+	wallet: FakeWallet,
+	service: MintService,
+	bolt11: string,
+): Promise<string> {
+	const decoded = await wallet.decodePayReq(bolt11);
+	wallet.simulatePayment(decoded.paymentHash);
+	await service.handleInvoiceSettled(decoded.paymentHash);
+	return decoded.paymentHash;
+}
+
 describe('MintService', () => {
 	let service: MintService;
 	let wallet: FakeWallet;
@@ -113,11 +130,10 @@ describe('MintService', () => {
 			// 1. Create quote
 			const quote = await service.createMintQuote(8, 'sat');
 
-			// 2. Simulate LN payment
-			const paymentHash = quote.request.slice(-20).padEnd(64, '0');
-			wallet.simulatePayment(paymentHash);
+			// 2. Simulate LN payment (uses actual payment hash via FakeWallet.bolt11Map)
+			await simulateInvoicePaid(wallet, service, quote.request);
 
-			// 3. Check quote is now PAID
+			// 3. Check quote is now PAID (state driven by DB via handleInvoiceSettled)
 			const updated = await service.getMintQuote(quote.quote);
 			expect(updated.state).toBe('PAID');
 
@@ -140,8 +156,7 @@ describe('MintService', () => {
 
 		itDb('mint saga recovery: re-mint returns stored sigs', async () => {
 			const quote = await service.createMintQuote(4, 'sat');
-			const paymentHash = quote.request.slice(-20).padEnd(64, '0');
-			wallet.simulatePayment(paymentHash);
+			await simulateInvoicePaid(wallet, service, quote.request);
 
 			const { blindedMessage } = createTestBlindedMessage(
 				'saga_mint_secret',
@@ -164,8 +179,7 @@ describe('MintService', () => {
 		itDb('full swap flow: mint → swap', async () => {
 			// First mint some tokens
 			const quote = await service.createMintQuote(4, 'sat');
-			const paymentHash = quote.request.slice(-20).padEnd(64, '0');
-			wallet.simulatePayment(paymentHash);
+			await simulateInvoicePaid(wallet, service, quote.request);
 
 			const { blindedMessage: mintOutput, r: mintR } =
 				createTestBlindedMessage('swap_in_secret', 4, keysetId);
@@ -276,8 +290,7 @@ describe('MintService', () => {
 		itDb('melt: payment failure releases pending proofs (proofs remain spendable)', async () => {
 			// 1. Mint tokens
 			const mintQuote = await service.createMintQuote(16, 'sat');
-			const paymentHash = mintQuote.request.slice(-20).padEnd(64, '0');
-			wallet.simulatePayment(paymentHash);
+			await simulateInvoicePaid(wallet, service, mintQuote.request);
 
 			const { blindedMessage: mintOutput, r: mintR } =
 				createTestBlindedMessage('melt_fail_secret', 16, keysetId);
@@ -321,8 +334,7 @@ describe('MintService', () => {
 		itDb('melt: success burns proofs permanently (proofs become SPENT)', async () => {
 			// 1. Mint tokens
 			const mintQuote = await service.createMintQuote(16, 'sat');
-			const paymentHash = mintQuote.request.slice(-20).padEnd(64, '0');
-			wallet.simulatePayment(paymentHash);
+			await simulateInvoicePaid(wallet, service, mintQuote.request);
 
 			const { blindedMessage: mintOutput, r: mintR } =
 				createTestBlindedMessage('melt_burn_secret', 16, keysetId);
@@ -366,8 +378,7 @@ describe('MintService', () => {
 		itDb('full melt flow: mint → melt', async () => {
 			// 1. Mint tokens
 			const mintQuote = await service.createMintQuote(16, 'sat');
-			const paymentHash = mintQuote.request.slice(-20).padEnd(64, '0');
-			wallet.simulatePayment(paymentHash);
+			await simulateInvoicePaid(wallet, service, mintQuote.request);
 
 			const { blindedMessage: mintOutput, r: mintR } =
 				createTestBlindedMessage('melt_in_secret', 16, keysetId);
