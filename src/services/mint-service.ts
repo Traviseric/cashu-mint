@@ -571,7 +571,7 @@ export class MintService {
 	private getActiveKeyset(): KeysetState {
 		const ks = this.keysets.get(this.activeKeysetId);
 		if (!ks) {
-			throw new Error('No active keyset — call init() first');
+			throw new KeysetNotFoundError('No active keyset — call init() first');
 		}
 		return ks;
 	}
@@ -631,7 +631,10 @@ export class MintService {
 	/** Sign an array of blinded messages, return BlindSignature[] */
 	private signOutputs(outputs: BlindedMessage[]): BlindSignature[] {
 		return outputs.map((output) => {
-			const keyset = this.keysets.get(output.id)!;
+			const keyset = this.keysets.get(output.id);
+			if (!keyset) {
+				throw new KeysetNotFoundError(`Keyset ${output.id} not found`);
+			}
 			const privKey = keyset.privateKeys[String(output.amount)];
 			const C_ = signBlindedMessage(output.B_, privKey);
 			return {
