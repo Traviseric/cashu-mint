@@ -53,6 +53,8 @@ class MintInfoResponse(BaseModel):
 _SUPPORTED_NUTS: dict[str, dict] = {
     "1": {"disabled": False},   # Mint public keys
     "2": {"disabled": False},   # Keysets and fees
+    "10": {"disabled": False},  # Well-known spending conditions (NUT-10)
+    "11": {"disabled": False},  # Pay-to-Pubkey / P2PK (NUT-11)
     "12": {"disabled": False},  # DLEQ proofs (NUT-12)
 }
 
