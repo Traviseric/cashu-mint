@@ -11,9 +11,9 @@ export async function getActiveKeysets() {
 	return prisma.keyset.findMany({ where: { active: true } });
 }
 
-/** Get all keysets (active + inactive) */
+/** Get all keysets (active + inactive), ordered by derivation index */
 export async function getAllKeysets() {
-	return prisma.keyset.findMany();
+	return prisma.keyset.findMany({ orderBy: { derivationIndex: 'asc' } });
 }
 
 /** Get keyset by ID */
@@ -26,11 +26,17 @@ export async function createKeyset(params: {
 	id: string;
 	unit: string;
 	active: boolean;
+	derivationIndex?: number;
 }) {
 	return prisma.keyset.upsert({
 		where: { id: params.id },
 		update: { active: params.active },
-		create: { id: params.id, unit: params.unit, active: params.active },
+		create: {
+			id: params.id,
+			unit: params.unit,
+			active: params.active,
+			derivationIndex: params.derivationIndex ?? 0,
+		},
 	});
 }
 

@@ -21,9 +21,10 @@ enum QuoteType {
 }
 
 model Keyset {
-  id     String  @id
-  active Boolean @default(true)
-  unit   String  @default("sat")
+  id              String  @id
+  active          Boolean @default(true)
+  unit            String  @default("sat")
+  derivationIndex Int     @default(0) @map("derivation_index")
 
   spentProofs     SpentProof[]
   blindSignatures BlindSignature[]

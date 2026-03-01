@@ -62,6 +62,7 @@ interface KeysetState {
 	id: string;
 	unit: string;
 	active: boolean;
+	derivationIndex: number;
 	privateKeys: Record<string, string>;
 	publicKeys: Record<string, string>;
 }
@@ -69,31 +70,65 @@ interface KeysetState {
 export class MintService {
 	private keysets = new Map<string, KeysetState>();
 	private activeKeysetId = '';
+	private currentDerivationIndex = 0;
 
 	constructor(
 		private config: MintConfig,
 		private lightning: ILightningBackend,
 	) {}
 
-	/** Initialize mint: derive keyset from seed, upsert in DB, load into memory */
+	/** Initialize mint: load all historical keysets from DB, create first one if none exist */
 	async init(): Promise<void> {
-		const { privateKeys, publicKeys } = generateKeysFromSeed(
-			this.config.mintPrivateKey,
-			0,
-		);
-		const keysetId = deriveKeysetId(publicKeys);
+		// Load all existing keysets (active + inactive) from DB into memory
+		const allKeysets = await repo.getAllKeysets();
 
-		await repo.createKeyset({ id: keysetId, unit: 'sat', active: true });
+		for (const ks of allKeysets) {
+			const { privateKeys, publicKeys } = generateKeysFromSeed(
+				this.config.mintPrivateKey,
+				ks.derivationIndex,
+			);
+			this.keysets.set(ks.id, {
+				id: ks.id,
+				unit: ks.unit,
+				active: ks.active,
+				derivationIndex: ks.derivationIndex,
+				privateKeys,
+				publicKeys,
+			});
+		}
 
-		const state: KeysetState = {
-			id: keysetId,
-			unit: 'sat',
-			active: true,
-			privateKeys,
-			publicKeys,
-		};
-		this.keysets.set(keysetId, state);
-		this.activeKeysetId = keysetId;
+		// Find the active keyset with the highest derivation index for 'sat' unit
+		const activeKeysets = allKeysets.filter((k) => k.active && k.unit === 'sat');
+		if (activeKeysets.length > 0) {
+			const latest = activeKeysets.reduce((best, k) =>
+				k.derivationIndex > best.derivationIndex ? k : best,
+			);
+			this.activeKeysetId = latest.id;
+			this.currentDerivationIndex = latest.derivationIndex;
+		} else {
+			// No keyset in DB — derive and create the first one
+			await this._createNewKeyset(0);
+		}
+	}
+
+	/**
+	 * Rotate the active keyset — deactivates current, derives next.
+	 * Old keyset stays in memory and remains spendable (redeem-only).
+	 * Returns the new active keyset ID.
+	 */
+	async rotateKeyset(): Promise<{ newKeysetId: string }> {
+		// Deactivate current active keyset in DB and memory
+		await repo.deactivateKeyset(this.activeKeysetId);
+		const current = this.keysets.get(this.activeKeysetId);
+		if (current) {
+			current.active = false;
+		}
+
+		// Derive new keyset at next index
+		const nextIndex = this.currentDerivationIndex + 1;
+		const newState = await this._createNewKeyset(nextIndex);
+
+		return { newKeysetId: newState.id };
 	}
 
 	/** GET /v1/keys — return active keyset public keys */
@@ -503,6 +538,30 @@ export class MintService {
 	}
 
 	// ─── Private Helpers ───────────────────────────────────────────────
+
+	/** Derive a new keyset at the given index, persist to DB, and load into memory */
+	private async _createNewKeyset(index: number): Promise<KeysetState> {
+		const { privateKeys, publicKeys } = generateKeysFromSeed(
+			this.config.mintPrivateKey,
+			index,
+		);
+		const keysetId = deriveKeysetId(publicKeys);
+
+		await repo.createKeyset({ id: keysetId, unit: 'sat', active: true, derivationIndex: index });
+
+		const state: KeysetState = {
+			id: keysetId,
+			unit: 'sat',
+			active: true,
+			derivationIndex: index,
+			privateKeys,
+			publicKeys,
+		};
+		this.keysets.set(keysetId, state);
+		this.activeKeysetId = keysetId;
+		this.currentDerivationIndex = index;
+		return state;
+	}
 
 	private getActiveKeyset(): KeysetState {
 		const ks = this.keysets.get(this.activeKeysetId);
