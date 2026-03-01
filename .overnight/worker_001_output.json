@@ -1,0 +1,48 @@
+{
+  "success": true,
+  "completed": 6,
+  "blocked": 0,
+  "tasks": [
+    {
+      "task": "011-P1-fix-lnd-estimatefee-void-reject-bug.md",
+      "status": "completed",
+      "commit": "8f1fa68"
+    },
+    {
+      "task": "012-P1-fix-getactivekeyset-plain-error.md",
+      "status": "completed",
+      "commit": "b9923f3",
+      "note": "Already committed by prior session"
+    },
+    {
+      "task": "013-P1-fix-nonnull-assertion-signoutputs.md",
+      "status": "completed",
+      "commit": "b9923f3",
+      "note": "Already committed by prior session"
+    },
+    {
+      "task": "014-P2-remove-dead-getproofstates-export.md",
+      "status": "completed",
+      "commit": "f8f9622",
+      "note": "Already committed by prior session"
+    },
+    {
+      "task": "015-P3-fix-redundant-witness-patterns.md",
+      "status": "completed",
+      "commit": "8f1fa68",
+      "note": "mint-service.ts ternaries simplified (2 locations). repository.ts patterns retained — Prisma NullableJsonNull guard (null → undefined prevents type error)."
+    },
+    {
+      "task": "016-P2-lnd-estimatefee-implement-estimateroutefee-rpc.md",
+      "status": "completed",
+      "commit": "8f1fa68"
+    }
+  ],
+  "files_changed": [
+    "src/lightning/lnd.ts",
+    "src/services/mint-service.ts"
+  ],
+  "test_results": "33 passing, 22 skipped (require PostgreSQL/LND), 0 failing",
+  "typecheck": "clean (TSC exit 0)",
+  "suggestion": "All task queue items complete. Next: CI/CD pipeline, Swagger/OpenAPI docs wiring, or NUT-09 restore tokens support."
+}

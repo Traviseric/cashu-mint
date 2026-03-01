@@ -1,0 +1,99 @@
+{
+  "session": "code_quality_audit",
+  "total_findings": 18,
+  "accepted": 6,
+  "rejected": 0,
+  "deferred": 9,
+  "split": 0,
+  "merged": 4,
+  "sources": {
+    "code_quality_audit": 16,
+    "review_audit_new_tasks": 2
+  },
+  "accepted_tasks": [
+    {
+      "task_file": "011-P1-fix-lnd-estimatefee-void-reject-bug.md",
+      "findings_merged": [
+        "lnd.ts:154 — void reject bug (HIGH)",
+        "lnd.ts:148 — destBytes dead variable (MEDIUM)",
+        "lnd.ts:191 — paymentHash dead variable (MEDIUM)"
+      ],
+      "reason": "All three are in the same function area of lnd.ts. The void reject is a real production bug (promise never rejects on error). Dead vars merged in since a worker fixing the bug will be in the same code."
+    },
+    {
+      "task_file": "012-P1-fix-getactivekeyset-plain-error.md",
+      "finding": "mint-service.ts:573 — getActiveKeyset() throws plain Error (HIGH)",
+      "reason": "Verified: line 574 throws `new Error('No active keyset...')` while the adjacent getKeysetForProof uses KeysetNotFoundError. Plain Error escapes instanceof CashuError handler, causing unstructured 500."
+    },
+    {
+      "task_file": "013-P1-fix-nonnull-assertion-signoutputs.md",
+      "finding": "mint-service.ts:634 — non-null assertion ! in signOutputs() (HIGH)",
+      "reason": "Verified: `this.keysets.get(output.id)!` at line 634. If keyset missing (e.g., future refactor skips validateOutput), throws unhandled TypeError instead of typed CashuError."
+    },
+    {
+      "task_file": "014-P2-remove-dead-getproofstates-export.md",
+      "finding": "repository.ts:356 — dead getProofStates() export (MEDIUM)",
+      "reason": "Verified: function exists, exported, but no call sites found in codebase. Superseded by getProofStatesByY()."
+    },
+    {
+      "task_file": "015-P3-fix-redundant-witness-patterns.md",
+      "findings_merged": [
+        "repository.ts:103,291,326 — witness ?? undefined no-op (LOW)",
+        "mint-service.ts:208,463 — witness ternary redundancy (LOW)"
+      ],
+      "reason": "Both are no-op patterns on the witness field. Merged into one cleanup task. Quick find-and-replace."
+    },
+    {
+      "task_file": "016-P2-lnd-estimatefee-implement-estimateroutefee-rpc.md",
+      "finding": "review_audit new_task — EstimateRouteFee RPC not called (MEDIUM)",
+      "reason": "Worker task 002 claimed full LND implementation but estimateFee uses hardcoded fallback. Real gRPC call would give production-accurate fee reserves."
+    }
+  ],
+  "rejections": [],
+  "deferrals": [
+    {
+      "finding": "bdhke.ts:126 — generateDLEQ() exported but throws Not implemented",
+      "reason": "Intentional Phase 2 roadmap item. The test validates the throw, which is correct behavior. Deferring until Phase 2."
+    },
+    {
+      "finding": "lnd.ts:47 — double cast as unknown as GrpcPackage",
+      "reason": "Necessary pattern for untyped gRPC proto bindings. No type-safe alternative without switching gRPC client libraries (larger scope). Low risk in current usage."
+    },
+    {
+      "finding": "mint-service.ts:278 — type assertion for DB enum state",
+      "reason": "Standard ORM-to-domain boundary pattern. Low risk with Prisma-managed migrations. Not actionable without significant refactoring."
+    },
+    {
+      "finding": "types.ts:151 — MintInfo.nuts typed as Record<string, object>",
+      "reason": "Weak typing but cosmetic. No runtime impact. Deferred."
+    },
+    {
+      "finding": "mint-service.ts:406 — meltTokens() is 108 lines (function length)",
+      "reason": "Refactoring for readability, not a bug. Not blocking any functionality. Deferred."
+    },
+    {
+      "finding": "lnd.ts:1 — LndBackend has zero test coverage",
+      "reason": "Large scope (mock gRPC client needed). No CI pipeline exists. Deferred until CI/CD setup."
+    },
+    {
+      "finding": "routes/v1/ — route handlers have no direct unit tests",
+      "reason": "Large scope. Integration tests cover happy paths. Deferred until CI/CD setup."
+    },
+    {
+      "finding": "config.ts:1 — config validation has no tests",
+      "reason": "Nice-to-have. No CI pipeline. Deferred."
+    },
+    {
+      "finding": "review_audit new_task — sendPayment returns fee: 0 hardcoded",
+      "reason": "Low priority. Fee reserve is collected upfront. Actual fee extraction requires proto extension. Deferred until EstimateRouteFee (task 016) is done."
+    }
+  ],
+  "project_declared": {
+    "total": 0,
+    "accepted": 0,
+    "merged": 0,
+    "rejected": 0,
+    "deferred": 0
+  },
+  "notes": "No OVERNIGHT_TASKS.md found. All 10 prior active tasks have status:completed. Conductor directed synthesis from code_quality_audit. review_audit new_tasks also scanned — 1 accepted (EstimateRouteFee RPC), 1 deferred (sendPayment fee: 0). No new rejections to add to lessons.json."
+}

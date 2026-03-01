@@ -1,0 +1,205 @@
+{
+  "success": true,
+  "next_box": "CONDUCTOR",
+  "context": {
+    "sources_analyzed": [
+      "README.md",
+      "ROADMAP.md",
+      "CLAUDE.md",
+      "package.json",
+      "prisma/schema.prisma",
+      "src/services/mint-service.ts",
+      "src/lightning/lnd.ts",
+      "src/lightning/interface.ts",
+      "src/lightning/fake-wallet.ts",
+      "src/core/crypto/bdhke.ts",
+      "src/core/crypto/keyset.ts",
+      "src/core/types.ts",
+      "src/core/errors.ts",
+      "src/core/constants.ts",
+      "src/db/repository.ts",
+      "src/routes/v1/*.ts",
+      "src/utils/schemas.ts",
+      "src/utils/config.ts",
+      "src/server.ts",
+      "src/services/__tests__/mint-service.test.ts",
+      "src/core/crypto/__tests__/bdhke.test.ts"
+    ],
+    "total_features_claimed": 19,
+    "gaps": [
+      {
+        "source": "ROADMAP.md",
+        "requirement": "LND gRPC backend (production Lightning)",
+        "gap_type": "partial",
+        "current_state": "LndBackend class exists in src/lightning/lnd.ts but every method throws 'LND backend not implemented — Phase 1'. The class has config types and constructor but zero functional implementation. No gRPC channel setup, no proto loading, no actual LND calls.",
+        "priority": "P0",
+        "estimated_effort": "high",
+        "blocking": true,
+        "files_involved": ["src/lightning/lnd.ts", "src/lightning/interface.ts"]
+      },
+      {
+        "source": "ROADMAP.md",
+        "requirement": "Integration tests against cashu-ts client",
+        "gap_type": "missing",
+        "current_state": "No cashu-ts dependency in package.json. No integration test files testing against the cashu-ts wallet library. Existing integration tests use manual BDHKE unblinding rather than a real wallet client.",
+        "priority": "P1",
+        "estimated_effort": "medium",
+        "blocking": false,
+        "files_involved": ["src/services/__tests__/mint-service.test.ts"]
+      },
+      {
+        "source": "CLAUDE.md / src/core/crypto/bdhke.ts",
+        "requirement": "NUT-12 DLEQ proofs",
+        "gap_type": "partial",
+        "current_state": "DLEQProof type defined in types.ts. BlindSignature has optional dleq field. generateDLEQ function exists in bdhke.ts but throws 'Not implemented — Phase 2'. Test confirms it throws. Roadmap places this in Phase 2 but the type infrastructure is already in place.",
+        "priority": "P2",
+        "estimated_effort": "medium",
+        "blocking": false,
+        "files_involved": ["src/core/crypto/bdhke.ts", "src/core/types.ts"]
+      },
+      {
+        "source": "src/services/mint-service.ts:456-461",
+        "requirement": "Melt failure recovery — unspend proofs on Lightning payment failure",
+        "gap_type": "partial",
+        "current_state": "Code comment at line 457 says 'Payment failed — ideally should unspend proofs, but for Phase 1 we mark the quote as UNPAID (proofs are already spent though)'. If Lightning payment fails after proofs are atomically spent, user loses their tokens permanently. This is a fund-loss bug.",
+        "priority": "P0",
+        "estimated_effort": "medium",
+        "blocking": true,
+        "files_involved": ["src/services/mint-service.ts", "src/db/repository.ts"]
+      },
+      {
+        "source": "prisma/schema.prisma",
+        "requirement": "Store fee_reserve on melt quotes",
+        "gap_type": "missing",
+        "current_state": "PendingQuote schema has no feeReserve column. createMeltQuote in repository.ts accepts feeReserve param but silently drops it — never stored. getMeltQuote re-estimates fee on every call via lightning.estimateFee(), which could return a different value than quoted. The API response fee_reserve may be inconsistent between quote creation and retrieval.",
+        "priority": "P1",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["prisma/schema.prisma", "src/db/repository.ts", "src/services/mint-service.ts"]
+      },
+      {
+        "source": "src/services/mint-service.ts",
+        "requirement": "PENDING proof state tracking for in-flight melt payments",
+        "gap_type": "missing",
+        "current_state": "ProofState type includes 'PENDING' but checkProofState only returns 'SPENT' or 'UNSPENT'. During melt, proofs are atomically spent then Lightning payment is attempted — there is no PENDING intermediate state. If melt payment is in-flight, proofs show as SPENT (not PENDING). NUT-07 spec requires PENDING state for proofs locked in an in-flight melt.",
+        "priority": "P1",
+        "estimated_effort": "medium",
+        "blocking": false,
+        "files_involved": ["src/services/mint-service.ts", "src/db/repository.ts", "prisma/schema.prisma"]
+      },
+      {
+        "source": "README.md / package.json",
+        "requirement": "npm run build compiles TypeScript to dist/",
+        "gap_type": "untested",
+        "current_state": "Build script exists ('tsc') and start script references 'dist/server.js', but there are no tests or CI checks verifying the build succeeds. tsconfig.json outDir setting not verified. Production deployment path is untested.",
+        "priority": "P2",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["package.json", "tsconfig.json"]
+      },
+      {
+        "source": "README.md",
+        "requirement": ".env.example file for dev setup",
+        "gap_type": "untested",
+        "current_state": ".env.example file exists (referenced in README Quick Start), but its contents were not verified to contain all required env vars (DATABASE_URL, MINT_PRIVATE_KEY, etc). Minor gap.",
+        "priority": "P2",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": [".env.example", "src/utils/config.ts"]
+      },
+      {
+        "source": "package.json",
+        "requirement": "@fastify/swagger and @fastify/swagger-ui for API docs",
+        "gap_type": "missing",
+        "current_state": "Both @fastify/swagger and @fastify/swagger-ui are listed as dependencies in package.json but are never imported or registered anywhere in the codebase. No Swagger/OpenAPI documentation is generated. Dead dependencies.",
+        "priority": "P2",
+        "estimated_effort": "medium",
+        "blocking": false,
+        "files_involved": ["package.json", "src/server.ts", "src/routes/index.ts"]
+      },
+      {
+        "source": "package.json",
+        "requirement": "@fastify/websocket for real-time subscriptions",
+        "gap_type": "missing",
+        "current_state": "@fastify/websocket is listed as a dependency but never imported or used. NUT-17 WebSocket subscriptions are listed as Phase 3 in the roadmap. The dependency is premature — dead weight.",
+        "priority": "P2",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["package.json"]
+      },
+      {
+        "source": "src/lightning/interface.ts",
+        "requirement": "subscribeInvoices for real-time invoice settlement detection",
+        "gap_type": "partial",
+        "current_state": "ILightningBackend defines subscribeInvoices() returning AsyncIterable<InvoiceUpdate>. FakeWallet implements it with a working listener queue. However, the server never calls subscribeInvoices() — invoice settlement is only detected via polling (FakeWallet.isSettled check in getMintQuote). There is no background invoice subscription loop. For production LND, invoices would never transition from UNPAID to PAID without manual polling.",
+        "priority": "P1",
+        "estimated_effort": "medium",
+        "blocking": true,
+        "files_involved": ["src/services/mint-service.ts", "src/server.ts", "src/lightning/interface.ts"]
+      },
+      {
+        "source": "CLAUDE.md",
+        "requirement": "Keyset rotation — old keysets stay spendable but not issuable",
+        "gap_type": "partial",
+        "current_state": "deactivateKeyset() exists in repository.ts. validateOutput correctly rejects inactive keysets for new minting. However, there is no API endpoint or mechanism to trigger keyset rotation. MintService.init() always creates a single keyset from index 0. There is no support for loading multiple historical keysets from DB on startup, and no rotation logic.",
+        "priority": "P1",
+        "estimated_effort": "medium",
+        "blocking": false,
+        "files_involved": ["src/services/mint-service.ts", "src/db/repository.ts"]
+      },
+      {
+        "source": "src/core/constants.ts",
+        "requirement": "MAX_INPUTS and MAX_OUTPUTS enforcement in service layer",
+        "gap_type": "partial",
+        "current_state": "MAX_INPUTS (1000) and MAX_OUTPUTS (1000) constants defined. Zod schemas enforce .max(1000) at the route edge. However, MintService methods don't enforce these limits — if called directly (e.g., from tests or future internal callers), limits are bypassed. Defense-in-depth gap.",
+        "priority": "P2",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["src/services/mint-service.ts", "src/core/constants.ts"]
+      },
+      {
+        "source": "CLAUDE.md",
+        "requirement": "Curve point validity validation on incoming B_ and C values",
+        "gap_type": "partial",
+        "current_state": "signBlindedMessage validates B_ with assertValidity(). verifyProof validates C via fromHex (throws on invalid). However, route-level Zod schemas only check B_ is a non-empty string — no hex format validation, no point-on-curve check at the edge. Invalid hex strings will cause uncaught crypto errors that bubble up as 500s instead of 400 validation errors.",
+        "priority": "P1",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["src/utils/schemas.ts", "src/core/crypto/bdhke.ts"]
+      },
+      {
+        "source": "src/services/mint-service.ts",
+        "requirement": "Melt quote expiry check on getMeltQuote",
+        "gap_type": "missing",
+        "current_state": "getMintQuote checks expiry and transitions to EXPIRED state. getMeltQuote does NOT check expiry — it always returns the current state even if the quote has expired. Inconsistent behavior between mint and melt quote lookups.",
+        "priority": "P1",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["src/services/mint-service.ts"]
+      },
+      {
+        "source": "src/routes/v1/*.ts",
+        "requirement": "Route-level error handling: distinguish 400 vs 404 vs 500",
+        "gap_type": "partial",
+        "current_state": "All CashuError subclasses return HTTP 400 regardless of error type. QuoteNotFoundError and KeysetNotFoundError should return 404. Unexpected errors fall through to Fastify's default 500 handler. No global error handler registered.",
+        "priority": "P2",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["src/routes/v1/swap.ts", "src/routes/v1/mint.ts", "src/routes/v1/melt.ts", "src/routes/v1/checkstate.ts"]
+      },
+      {
+        "source": "src/server.ts",
+        "requirement": "CORS support for browser-based wallets",
+        "gap_type": "missing",
+        "current_state": "No CORS configuration. @fastify/cors is not installed. Browser-based Cashu wallets (e.g., Nutstash, cashu.me) will be unable to connect to this mint due to CORS restrictions.",
+        "priority": "P1",
+        "estimated_effort": "low",
+        "blocking": false,
+        "files_involved": ["src/server.ts", "package.json"]
+      }
+    ],
+    "implementation_coverage": 72,
+    "critical_gaps": 2,
+    "recommendation": "Focus on the 2 P0 gaps first: (1) Melt failure recovery — proofs are permanently lost if Lightning payment fails, which is a fund-loss bug. Add an 'unspendProofs' repo method or use PENDING state with rollback. (2) LND gRPC backend — the mint cannot run in production without a real Lightning backend. After P0s, address P1s in order: invoice subscription loop (settlement detection won't work without it), fee_reserve persistence, PENDING proof state, melt quote expiry check, keyset rotation, input validation hardening (curve points), and CORS. Dead dependencies (@fastify/swagger, @fastify/websocket) should be removed or wired up."
+  }
+}

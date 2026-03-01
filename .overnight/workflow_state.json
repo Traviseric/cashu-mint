@@ -1,0 +1,33 @@
+{
+  "name": "discover",
+  "steps": [
+    "RESEARCHER",
+    "FEATURE_AUDIT",
+    "GAP_ANALYZER"
+  ],
+  "current_step_index": 3,
+  "completed_steps": [
+    "RESEARCHER",
+    "FEATURE_AUDIT",
+    "GAP_ANALYZER"
+  ],
+  "step_results": [
+    {
+      "step": "RESEARCHER",
+      "success": true,
+      "completed_at": "2026-02-28T18:59:32.258147"
+    },
+    {
+      "step": "FEATURE_AUDIT",
+      "success": true,
+      "completed_at": "2026-02-28T19:01:48.731249"
+    },
+    {
+      "step": "GAP_ANALYZER",
+      "success": true,
+      "completed_at": "2026-02-28T19:04:00.217862"
+    }
+  ],
+  "started_at": "2026-02-28T18:57:00.549334",
+  "status": "completed"
+}

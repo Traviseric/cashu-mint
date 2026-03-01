@@ -1,0 +1,23 @@
+{
+  "rejected_findings": [
+    {
+      "source": "gap_analyzer",
+      "finding": "MAX_INPUTS and MAX_OUTPUTS enforcement in service layer — defense-in-depth duplication",
+      "reason": "Zod schemas already enforce limits at the route edge. No direct service callers bypass routes in current codebase. Duplicate enforcement is premature complexity.",
+      "rejected_at": "2026-02-28T00:00:00Z"
+    },
+    {
+      "source": "gap_analyzer",
+      "finding": "@fastify/websocket dead dependency",
+      "reason": "Correctly a Phase 3 placeholder per ROADMAP. Not blocking, not a bug.",
+      "rejected_at": "2026-02-28T00:00:00Z"
+    },
+    {
+      "source": "gap_analyzer",
+      "finding": "Build script (npm run build) untested",
+      "reason": "No CI exists yet. TypeScript already passes typecheck. Build test without CI pipeline is premature.",
+      "rejected_at": "2026-02-28T00:00:00Z"
+    }
+  ],
+  "unproductive_audits": []
+}
