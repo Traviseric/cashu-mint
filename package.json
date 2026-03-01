@@ -23,6 +23,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@fastify/cors": "^11.2.0",
     "@fastify/swagger": "^9.4.2",
     "@fastify/swagger-ui": "^5.2.1",
     "@fastify/websocket": "^11.0.2",

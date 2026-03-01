@@ -3,6 +3,7 @@
  */
 
 import Fastify, { type FastifyBaseLogger } from 'fastify';
+import cors from '@fastify/cors';
 import { registerRoutes } from './routes/index.js';
 import { MintService } from './services/mint-service.js';
 import { createLightningBackend } from './lightning/index.js';
@@ -23,6 +24,14 @@ async function main() {
 
 	const fastify = Fastify({
 		logger: true,
+	});
+
+	// CORS — allow all origins (public mint, browser wallets need this)
+	await fastify.register(cors, {
+		origin: true,
+		methods: ['GET', 'POST', 'OPTIONS'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		credentials: false,
 	});
 
 	// Create Lightning backend

@@ -2,11 +2,19 @@
 
 import { z } from 'zod';
 
+/** Compressed secp256k1 curve point: 02/03 prefix + 32 bytes = 66 hex chars */
+const hexPoint = z
+	.string()
+	.regex(
+		/^(02|03)[0-9a-fA-F]{64}$/,
+		'Must be a compressed secp256k1 point (66 hex chars, 02/03 prefix)',
+	);
+
 /** Single proof (token component) */
 export const ProofSchema = z.object({
 	amount: z.number().int().positive(),
 	secret: z.string().min(1).max(1024),
-	C: z.string().min(1),
+	C: hexPoint,
 	id: z.string().min(1),
 	witness: z.string().optional(),
 });
@@ -15,7 +23,7 @@ export const ProofSchema = z.object({
 export const BlindedMessageSchema = z.object({
 	amount: z.number().int().positive(),
 	id: z.string().min(1),
-	B_: z.string().min(1),
+	B_: hexPoint,
 });
 
 /** POST /v1/swap */
