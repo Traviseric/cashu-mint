@@ -10,9 +10,15 @@ Reference: https://github.com/cashubtc/nuts/blob/main/01.md
 
 import hashlib
 import os
-from typing import Optional
 
-from coincurve import PrivateKey
+from cashu_mint.crypto.ec import (
+    G,
+    N,
+    point_to_bytes,
+    privkey_from_bytes,
+    privkey_to_pubkey,
+    scalar_mult,
+)
 
 # Standard Cashu denominations (powers of 2, in satoshis up to ~33 BTC).
 # Each denomination gets its own secp256k1 keypair.
@@ -84,8 +90,9 @@ def generate_keyset(
     for i, amount in enumerate(DENOMINATIONS):
         # Deterministic child key: SHA-256(master_key || index_4_bytes)
         child_secret = hashlib.sha256(master_key + i.to_bytes(4, "big")).digest()
-        priv = PrivateKey(child_secret)
-        pub_bytes = priv.public_key.format(compressed=True)
+        k = privkey_from_bytes(child_secret)
+        pub_pt = privkey_to_pubkey(k)
+        pub_bytes = point_to_bytes(pub_pt)
         keys[amount] = {
             "private": child_secret.hex(),
             "public": pub_bytes.hex(),
