@@ -208,17 +208,132 @@ export async function getBlindSignaturesByB_(bPrimes: string[]) {
 /** Get proof states by Y values for NUT-07 checkstate */
 export async function getProofStatesByY(
 	ys: string[],
-): Promise<Map<string, 'SPENT'>> {
-	const spent = await prisma.spentProof.findMany({
-		where: { y: { in: ys } },
-		select: { y: true },
-	});
+): Promise<Map<string, 'SPENT' | 'PENDING'>> {
+	const [spent, pending] = await Promise.all([
+		prisma.spentProof.findMany({
+			where: { y: { in: ys } },
+			select: { y: true },
+		}),
+		prisma.pendingProof.findMany({
+			where: { y: { in: ys } },
+			select: { y: true },
+		}),
+	]);
 
-	const stateMap = new Map<string, 'SPENT'>();
+	const stateMap = new Map<string, 'SPENT' | 'PENDING'>();
 	for (const s of spent) {
 		stateMap.set(s.y, 'SPENT');
 	}
+	for (const p of pending) {
+		if (!stateMap.has(p.y)) {
+			stateMap.set(p.y, 'PENDING');
+		}
+	}
 	return stateMap;
+}
+
+/**
+ * Lock proofs as PENDING for a melt operation (two-phase commit, phase 1).
+ * Checks both SpentProof and PendingProof for conflicts within a SERIALIZABLE
+ * transaction to prevent double-spend races.
+ * Throws a P2002-coded error if any proof is already spent or pending.
+ */
+export async function lockProofsAsPending(
+	proofs: Array<{
+		secret: string;
+		y: string;
+		amount: number;
+		keysetId: string;
+		c: string;
+		witness?: unknown;
+	}>,
+	meltQuoteId: string,
+) {
+	return prisma.$transaction(
+		async (tx) => {
+			const ys = proofs.map((p) => p.y);
+
+			const spentCount = await tx.spentProof.count({ where: { y: { in: ys } } });
+			if (spentCount > 0) {
+				const e = Object.assign(new Error('Proof already spent'), { code: 'P2002' });
+				throw e;
+			}
+
+			const pendingCount = await tx.pendingProof.count({ where: { y: { in: ys } } });
+			if (pendingCount > 0) {
+				const e = Object.assign(new Error('Proof already pending'), { code: 'P2002' });
+				throw e;
+			}
+
+			await tx.pendingProof.createMany({
+				data: proofs.map((p) => ({
+					secret: p.secret,
+					y: p.y,
+					amount: p.amount,
+					keysetId: p.keysetId,
+					c: p.c,
+					witness: p.witness ?? undefined,
+					meltQuoteId,
+				})),
+			});
+		},
+		{ isolationLevel: 'Serializable' },
+	);
+}
+
+/**
+ * Burn pending proofs permanently (two-phase commit, phase 2 — success path).
+ * Moves PendingProofs for the given melt quote into SpentProof and stores
+ * any change blind signatures in a single atomic transaction.
+ */
+export async function burnPendingProofs(
+	meltQuoteId: string,
+	changeSignatures?: Array<{
+		amount: number;
+		c_: string;
+		keysetId: string;
+		quoteId?: string;
+		b_?: string;
+	}>,
+) {
+	return prisma.$transaction(async (tx) => {
+		const pending = await tx.pendingProof.findMany({ where: { meltQuoteId } });
+
+		if (pending.length > 0) {
+			await tx.spentProof.createMany({
+				data: pending.map((p) => ({
+					secret: p.secret,
+					y: p.y,
+					amount: p.amount,
+					keysetId: p.keysetId,
+					c: p.c,
+					witness: p.witness ?? undefined,
+				})),
+			});
+			await tx.pendingProof.deleteMany({ where: { meltQuoteId } });
+		}
+
+		if (changeSignatures && changeSignatures.length > 0) {
+			await tx.blindSignature.createMany({
+				data: changeSignatures.map((s) => ({
+					amount: s.amount,
+					c_: s.c_,
+					keysetId: s.keysetId,
+					quoteId: s.quoteId ?? null,
+					b_: s.b_ ?? null,
+				})),
+			});
+		}
+	});
+}
+
+/**
+ * Release pending proofs (two-phase commit rollback — failure path).
+ * Deletes PendingProofs for the given melt quote, returning proofs to
+ * spendable state.
+ */
+export async function releasePendingProofs(meltQuoteId: string) {
+	return prisma.pendingProof.deleteMany({ where: { meltQuoteId } });
 }
 
 /** Get proof states for checkstate (NUT-07) — by secret */

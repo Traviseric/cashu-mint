@@ -27,6 +27,7 @@ model Keyset {
   derivationIndex Int     @default(0) @map("derivation_index")
 
   spentProofs     SpentProof[]
+  pendingProofs   PendingProof[]
   blindSignatures BlindSignature[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -67,17 +68,36 @@ model BlindSignature {
   @@map("blind_signatures")
 }
 
+model PendingProof {
+  secret      String @id
+  y           String @unique @map("y_point")
+  amount      Int
+  keysetId    String @map("keyset_id")
+  c           String
+  witness     Json?
+  meltQuoteId String @map("melt_quote_id")
+
+  keyset Keyset @relation(fields: [keysetId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([meltQuoteId])
+  @@map("pending_proofs")
+}
+
 model PendingQuote {
-  id      String     @id
-  request String
-  state   QuoteState @default(UNPAID)
-  type    QuoteType
-  amount  Int
-  unit    String     @default("sat")
-  expiry  DateTime
+  id          String     @id
+  request     String
+  state       QuoteState @default(UNPAID)
+  type        QuoteType
+  amount      Int
+  unit        String     @default("sat")
+  expiry      DateTime
+  paymentHash String?    @map("payment_hash")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([paymentHash])
   @@map("pending_quotes")
 }

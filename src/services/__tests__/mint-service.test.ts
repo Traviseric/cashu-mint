@@ -273,6 +273,96 @@ describe('MintService', () => {
 			expect(result.states[0].state).toBe('UNSPENT');
 		});
 
+		itDb('melt: payment failure releases pending proofs (proofs remain spendable)', async () => {
+			// 1. Mint tokens
+			const mintQuote = await service.createMintQuote(16, 'sat');
+			const paymentHash = mintQuote.request.slice(-20).padEnd(64, '0');
+			wallet.simulatePayment(paymentHash);
+
+			const { blindedMessage: mintOutput, r: mintR } =
+				createTestBlindedMessage('melt_fail_secret', 16, keysetId);
+			const mintResult = await service.mintTokens(mintQuote.quote, [mintOutput]);
+
+			// Unblind
+			const { secp256k1: secp } = await import('@noble/curves/secp256k1');
+			const { bytesToHex: toHex } = await import('@noble/hashes/utils');
+			const K = secp.ProjectivePoint.fromHex(publicKeys['16']);
+			const rK = K.multiply(BigInt(`0x${mintR}`));
+			const C_ = secp.ProjectivePoint.fromHex(mintResult.signatures[0].C_);
+			const proof = {
+				amount: 16,
+				secret: 'melt_fail_secret',
+				C: toHex(C_.subtract(rK).toRawBytes(true)),
+				id: keysetId,
+			};
+
+			// 2. Create melt quote
+			const meltQuote = await service.createMeltQuote('lnbc10n1fakefailtest00000000000', 'sat');
+
+			// 3. Make payment fail
+			wallet.setPaymentShouldFail(true);
+
+			// 4. Attempt melt — should throw
+			const { blindedMessage: changeOutput } = createTestBlindedMessage('melt_fail_change', 5, keysetId);
+			await expect(
+				service.meltTokens({ quote: meltQuote.quote, inputs: [proof], outputs: [changeOutput] }),
+			).rejects.toThrow('Payment failed');
+
+			// 5. Restore payment behaviour
+			wallet.setPaymentShouldFail(false);
+
+			// 6. Proofs must be UNSPENT — not permanently burned
+			const { hashToCurveString: h2c } = await import('../../core/crypto/bdhke.js');
+			const Y = h2c('melt_fail_secret');
+			const stateResult = await service.checkProofState([Y]);
+			expect(stateResult.states[0].state).toBe('UNSPENT');
+		});
+
+		itDb('melt: success burns proofs permanently (proofs become SPENT)', async () => {
+			// 1. Mint tokens
+			const mintQuote = await service.createMintQuote(16, 'sat');
+			const paymentHash = mintQuote.request.slice(-20).padEnd(64, '0');
+			wallet.simulatePayment(paymentHash);
+
+			const { blindedMessage: mintOutput, r: mintR } =
+				createTestBlindedMessage('melt_burn_secret', 16, keysetId);
+			const mintResult = await service.mintTokens(mintQuote.quote, [mintOutput]);
+
+			// Unblind
+			const { secp256k1: secp } = await import('@noble/curves/secp256k1');
+			const { bytesToHex: toHex } = await import('@noble/hashes/utils');
+			const K = secp.ProjectivePoint.fromHex(publicKeys['16']);
+			const rK = K.multiply(BigInt(`0x${mintR}`));
+			const C_ = secp.ProjectivePoint.fromHex(mintResult.signatures[0].C_);
+			const proof = {
+				amount: 16,
+				secret: 'melt_burn_secret',
+				C: toHex(C_.subtract(rK).toRawBytes(true)),
+				id: keysetId,
+			};
+
+			// 2. Melt
+			const meltQuote = await service.createMeltQuote('lnbc10n1fakeburntest00000000000', 'sat');
+			const { blindedMessage: changeOutput } = createTestBlindedMessage('melt_burn_change', 5, keysetId);
+			const meltResult = await service.meltTokens({
+				quote: meltQuote.quote,
+				inputs: [proof],
+				outputs: [changeOutput],
+			});
+			expect(meltResult.state).toBe('PAID');
+
+			// 3. Proof must be SPENT
+			const { hashToCurveString: h2c } = await import('../../core/crypto/bdhke.js');
+			const Y = h2c('melt_burn_secret');
+			const stateResult = await service.checkProofState([Y]);
+			expect(stateResult.states[0].state).toBe('SPENT');
+
+			// 4. Double-spend attempt must be rejected
+			await expect(
+				service.meltTokens({ quote: meltQuote.quote, inputs: [proof], outputs: [] }),
+			).rejects.toThrow();
+		});
+
 		itDb('full melt flow: mint → melt', async () => {
 			// 1. Mint tokens
 			const mintQuote = await service.createMintQuote(16, 'sat');

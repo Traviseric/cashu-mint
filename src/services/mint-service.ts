@@ -458,9 +458,9 @@ export class MintService {
 			changeSignatures = this.signOutputs(outputs);
 		}
 
-		// Atomically spend proofs
+		// Phase 1: lock proofs as PENDING (two-phase commit)
 		try {
-			await repo.spendProofsAndSignAtomically(
+			await repo.lockProofsAsPending(
 				inputs.map((p) => ({
 					secret: p.secret,
 					y: hashToCurveString(p.secret),
@@ -469,15 +469,7 @@ export class MintService {
 					c: p.C,
 					witness: p.witness ? p.witness : undefined,
 				})),
-				changeSignatures
-					? changeSignatures.map((s, i) => ({
-							amount: s.amount,
-							c_: s.C_,
-							keysetId: s.id,
-							quoteId: request.quote,
-							b_: outputs![i].B_,
-						}))
-					: [],
+				quote.id,
 			);
 		} catch (err: unknown) {
 			if (isPrismaUniqueConstraintError(err)) {
@@ -486,16 +478,39 @@ export class MintService {
 			throw err;
 		}
 
-		// Pay the Lightning invoice
-		const payResult = await this.lightning.sendPayment(quote.request, fee);
-		if (!payResult.success) {
-			// Payment failed — ideally should unspend proofs, but for Phase 1
-			// we mark the quote as UNPAID (proofs are already spent though)
+		// Phase 2: attempt Lightning payment
+		let payResult: Awaited<ReturnType<typeof this.lightning.sendPayment>>;
+		try {
+			payResult = await this.lightning.sendPayment(quote.request, fee);
+		} catch (err) {
+			// Payment threw — release the pending lock so proofs are spendable again
+			await repo.releasePendingProofs(quote.id);
+			await repo.updateQuoteState(request.quote, 'UNPAID');
 			throw new LightningBackendError(
-				payResult.error ?? 'Payment failed',
+				err instanceof Error ? err.message : 'Payment failed',
 			);
 		}
 
+		if (!payResult.success) {
+			// Payment returned failure — release the lock so proofs are spendable again
+			await repo.releasePendingProofs(quote.id);
+			await repo.updateQuoteState(request.quote, 'UNPAID');
+			throw new LightningBackendError(payResult.error ?? 'Payment failed');
+		}
+
+		// Payment succeeded — burn proofs permanently and store change signatures
+		await repo.burnPendingProofs(
+			quote.id,
+			changeSignatures
+				? changeSignatures.map((s, i) => ({
+						amount: s.amount,
+						c_: s.C_,
+						keysetId: s.id,
+						quoteId: request.quote,
+						b_: outputs![i].B_,
+					}))
+				: undefined,
+		);
 		await repo.updateQuoteState(request.quote, 'PAID');
 
 		return {
@@ -511,10 +526,7 @@ export class MintService {
 
 		const states = Ys.map((Y) => ({
 			Y,
-			state: (stateMap.has(Y) ? 'SPENT' : 'UNSPENT') as
-				| 'SPENT'
-				| 'UNSPENT'
-				| 'PENDING',
+			state: (stateMap.get(Y) ?? 'UNSPENT') as 'SPENT' | 'UNSPENT' | 'PENDING',
 		}));
 
 		return { states };

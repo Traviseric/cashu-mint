@@ -16,6 +16,7 @@ import type {
 export class FakeWallet implements ILightningBackend {
 	private invoices = new Map<string, { amount: number; memo: string; settled: boolean }>();
 	private updateListeners: Array<(update: InvoiceUpdate) => void> = [];
+	private _shouldFailPayment = false;
 
 	async createInvoice(amount: number, memo: string): Promise<Bolt11Invoice> {
 		const paymentHash = randomBytes(32).toString('hex');
@@ -68,12 +69,20 @@ export class FakeWallet implements ILightningBackend {
 	}
 
 	async sendPayment(_bolt11: string, _feeLimit: number): Promise<PaymentResult> {
+		if (this._shouldFailPayment) {
+			return { success: false, error: 'Payment failed (test)' };
+		}
 		const preimage = randomBytes(32).toString('hex');
 		return {
 			success: true,
 			preimage,
 			fee: 1,
 		};
+	}
+
+	/** Test helper — control whether sendPayment returns failure */
+	setPaymentShouldFail(fail: boolean): void {
+		this._shouldFailPayment = fail;
 	}
 
 	/**
