@@ -1,4 +1,4 @@
-@echo off
+﻿@echo off
 title GAP_ANALYZER - Claude Box
 cd /d "C:/code/cashu-mint"
 
@@ -8,8 +8,8 @@ set ANTHROPIC_API_KEY=
 REM Allow spawning from within a Claude Code session (e.g. testing)
 set CLAUDECODE=
 
-REM Use OAuth token for Pro subscription (env var only — no file swap to avoid race conditions)
-set CLAUDE_CODE_OAUTH_TOKEN=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
+REM Use OAuth token for Pro subscription (env var only â€” no file swap to avoid race conditions)
+set CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-REDACTED
 
 echo ========================================
 echo GAP_ANALYZER BOX v2.0.0
@@ -57,3 +57,4 @@ if %CLAUDE_EXIT% EQU 0 (
 REM Auto-close terminal after completion (Gas Town pattern)
 ping -n 3 127.0.0.1 >nul 2>&1
 exit
+

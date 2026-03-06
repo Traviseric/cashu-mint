@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "completed": 1,
+  "blocked": 0,
+  "task": "020-P2-implement-deterministic-secrets-nut13.md",
+  "status": "completed",
+  "commit": "5b18c76",
+  "files_changed": [
+    "cashu_mint/db/models.py",
+    "cashu_mint/db/crud.py",
+    "cashu_mint/routers/restore.py",
+    "cashu_mint/main.py",
+    "cashu_mint/routers/info.py",
+    "alembic/versions/f14d959954d2_add_blinded_signatures_table.py",
+    "tests/unit/test_restore.py"
+  ],
+  "test_results": "108 passed in 18.30s (all unit tests); 23 new NUT-09/NUT-13 tests all green",
+  "notes": [
+    "NUT-13 is wallet-side only: mint's hash_to_curve/BDHKE already accepts hex secrets transparently — verified by test",
+    "NUT-09 restore implemented: POST /v1/restore looks up issued blind sigs by B_ and returns matching ones",
+    "blinded_signatures table: B_ (PK), amount, keyset_id, C_, dleq_e, dleq_s, created_at",
+    "store_blind_signature() is idempotent on duplicate B_ (IntegrityError caught and ignored)",
+    "DLEQ fields stored alongside C_ and returned in restore response when present",
+    "Alembic migration f14d959954d2 chains from 66a7889ab3e3 (initial schema)",
+    "NUT-09 and NUT-13 added to _SUPPORTED_NUTS in GET /v1/info",
+    "DB dependency override pattern used in tests: app.dependency_overrides[get_db] with in-memory SQLite"
+  ],
+  "suggestion": "Next: implement NUT-03 token swap (task 007) — it should call store_blind_signature() for each issued C' so restore works end-to-end"
+}

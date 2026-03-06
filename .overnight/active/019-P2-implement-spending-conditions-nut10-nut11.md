@@ -3,7 +3,7 @@ id: 19
 title: "Implement NUT-10/11: Spending conditions and Pay-to-Pubkey (P2PK)"
 priority: P2
 severity: medium
-status: pending
+status: completed
 source: feature_audit
 file: "cashu_mint/nuts/spending_conditions.py"
 line: 0

@@ -3,7 +3,7 @@ id: 16
 title: "Implement NUT-12: DLEQ proofs for offline signature verification"
 priority: P1
 severity: high
-status: pending
+status: completed
 source: feature_audit
 file: "cashu_mint/crypto/dleq.py"
 line: 0

@@ -3,7 +3,7 @@ id: 20
 title: "Implement NUT-13: Deterministic secret derivation support"
 priority: P2
 severity: medium
-status: pending
+status: completed
 source: feature_audit
 file: "cashu_mint/nuts/restore.py"
 line: 0

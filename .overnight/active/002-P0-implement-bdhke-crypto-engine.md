@@ -3,7 +3,7 @@ id: 2
 title: "Implement NUT-00: BDHKE cryptographic engine"
 priority: P0
 severity: critical
-status: pending
+status: completed
 source: feature_audit
 file: "cashu_mint/crypto/bdhke.py"
 line: 0
