@@ -19,6 +19,7 @@ export const SUPPORTED_NUTS: Record<string, object> = {
 	'5': { methods: [{ method: 'bolt11', unit: 'sat', min_amount: 1, max_amount: 1_000_000 }], disabled: false },
 	'6': {},
 	'7': { supported: true },
+	'8': { supported: true }, // NUT-08: Lightning fee return as ecash change
 };
 
 /** Maximum number of input proofs per swap/melt request */

@@ -85,6 +85,19 @@ describe('MintService', () => {
 			expect(info.nuts).toBeDefined();
 			expect(info.nuts['7']).toEqual({ supported: true });
 		});
+
+		it('NUT-08: /info advertises fee return support', async () => {
+			const info = await service.getMintInfo();
+			expect(info.nuts['8']).toBeDefined();
+			expect((info.nuts['8'] as { supported: boolean }).supported).toBe(true);
+		});
+
+		it('LND fee: FakeWallet.sendPayment returns fee=1', async () => {
+			// Verifies the PaymentResult.fee field is populated by the backend
+			const result = await wallet.sendPayment('lnbc1_fake', 10);
+			expect(result.success).toBe(true);
+			expect(result.fee).toBe(1);
+		});
 	});
 
 	describe('Integration tests (need DB)', () => {
@@ -432,6 +445,69 @@ describe('MintService', () => {
 			// Subsequent call must also return EXPIRED (state persisted to DB)
 			const result2 = await service.getMeltQuote(quoteId);
 			expect(result2.state).toBe('EXPIRED');
+		});
+
+		itDb('keyset rotation: deactivates old keyset, derives new active keyset', async () => {
+			const initialKeys = await service.getKeys();
+			const initialKeysetId = initialKeys.keysets[0].id;
+
+			const { newKeysetId } = await service.rotateKeyset();
+
+			// New keyset ID must differ from old one
+			expect(newKeysetId).not.toBe(initialKeysetId);
+
+			// Active keyset is now the new one
+			const afterKeys = await service.getKeys();
+			expect(afterKeys.keysets[0].id).toBe(newKeysetId);
+
+			// Both keysets are listed — old one as inactive
+			const allKeysets = await service.getKeysets();
+			expect(allKeysets.keysets.length).toBe(2);
+			const oldEntry = allKeysets.keysets.find((k) => k.id === initialKeysetId);
+			const newEntry = allKeysets.keysets.find((k) => k.id === newKeysetId);
+			expect(oldEntry?.active).toBe(false);
+			expect(newEntry?.active).toBe(true);
+		});
+
+		itDb('melt: NUT-08 fee_paid reflects actual fee from Lightning backend', async () => {
+			// Mint 16 sats
+			const mintQuote = await service.createMintQuote(16, 'sat');
+			await simulateInvoicePaid(wallet, service, mintQuote.request);
+
+			const { blindedMessage: mintOutput, r: mintR } =
+				createTestBlindedMessage('nut08_fee_secret', 16, keysetId);
+			const mintResult = await service.mintTokens(mintQuote.quote, [mintOutput]);
+
+			// Unblind
+			const { secp256k1: secp } = await import('@noble/curves/secp256k1');
+			const { bytesToHex: toHex } = await import('@noble/hashes/utils');
+			const K = secp.ProjectivePoint.fromHex(publicKeys['16']);
+			const rK = K.multiply(BigInt(`0x${mintR}`));
+			const C_ = secp.ProjectivePoint.fromHex(mintResult.signatures[0].C_);
+			const proof = {
+				amount: 16,
+				secret: 'nut08_fee_secret',
+				C: toHex(C_.subtract(rK).toRawBytes(true)),
+				id: keysetId,
+			};
+
+			// Create melt quote (10 sats, FakeWallet returns fee=1)
+			const meltQuote = await service.createMeltQuote('lnbc10n1fakenut08fee00000000000', 'sat');
+			// 16 - 10 - 1 fee = 5 sats change
+			const { blindedMessage: changeOutput } = createTestBlindedMessage('nut08_change', 5, keysetId);
+
+			const meltResult = await service.meltTokens({
+				quote: meltQuote.quote,
+				inputs: [proof],
+				outputs: [changeOutput],
+			});
+
+			expect(meltResult.state).toBe('PAID');
+			// NUT-08: change signatures returned (fee return in ecash)
+			expect(meltResult.change).toHaveLength(1);
+			expect(meltResult.change![0].amount).toBe(5);
+			// FakeWallet fee is 1 sat — payment_preimage present confirms success
+			expect(meltResult.payment_preimage).toBeDefined();
 		});
 
 		itDb('full melt flow: mint → melt', async () => {

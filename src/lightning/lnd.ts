@@ -188,10 +188,13 @@ export class LndBackend implements ILightningBackend {
 					}
 
 					const preimage = Buffer.from(response.payment_preimage).toString('hex');
+					// Extract actual routing fee from payment_route if LND returns it
+					const feeMsat = response.payment_route?.total_fees_msat;
+					const fee = feeMsat !== undefined ? Math.ceil(Number(feeMsat) / 1000) : 0;
 					resolve({
 						success: true,
 						preimage,
-						fee: 0, // actual fee not available in SendResponse without Route message
+						fee,
 						error: undefined,
 					});
 				},
@@ -240,7 +243,12 @@ interface LndClient {
 		req: { payment_request: string; fee_limit: { fixed: number } },
 		cb: (
 			err: grpc.ServiceError | null,
-			res: { payment_error: string; payment_preimage: Buffer; payment_hash: Buffer },
+			res: {
+				payment_error: string;
+				payment_preimage: Buffer;
+				payment_hash: Buffer;
+				payment_route?: { total_fees_msat?: string | number };
+			},
 		) => void,
 	): void;
 }
