@@ -11,7 +11,7 @@
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import Fastify, { type FastifyInstance } from 'fastify';
-import { Mint, Wallet, MintQuoteState } from '@cashu/cashu-ts';
+import { Mint, Wallet, MintQuoteState, MeltQuoteState, CheckStateEnum } from '@cashu/cashu-ts';
 import { MintService } from '../../services/mint-service.js';
 import { FakeWallet } from '../../lightning/fake-wallet.js';
 import { registerRoutes } from '../../routes/index.js';
@@ -159,5 +159,33 @@ describe.skipIf(!process.env.DATABASE_URL)('cashu-ts wallet integration', () => 
 		// Original proofs should now be SPENT
 		const stateResponse = await mint.check({ Ys: originalYs });
 		expect(stateResponse.states.every((s) => s.state === 'SPENT')).toBe(true);
+	});
+
+	it('should complete a full melt flow: mint tokens → melt to Lightning', async () => {
+		// Step 1: Mint 32 sats of tokens
+		const mintQuote = await wallet.createMintQuoteBolt11(32);
+		await simulateInvoicePaid(fakeWallet, mintService, mintQuote.request);
+		const proofs = await wallet.mintProofsBolt11(32, mintQuote.quote);
+		expect(proofs.reduce((sum, p) => sum + p.amount, 0)).toBe(32);
+
+		// Step 2: Create a fake bolt11 to melt into (31 sats).
+		// FakeWallet.estimateFee always returns 1 sat, so fee_reserve = 1.
+		// 31 (amount) + 1 (fee_reserve) = 32 = exactly our proof balance.
+		const meltInvoice = await fakeWallet.createInvoice(31, 'melt integration test');
+
+		// Step 3: Get a melt quote from the mint
+		const meltQuote = await wallet.createMeltQuoteBolt11(meltInvoice.bolt11);
+		expect(meltQuote.amount).toBe(31);
+		expect(meltQuote.fee_reserve).toBe(1);
+		expect(meltQuote.state).toBe(MeltQuoteState.UNPAID);
+
+		// Step 4: Execute melt — FakeWallet.sendPayment always succeeds
+		const meltResult = await wallet.meltProofsBolt11(meltQuote, proofs);
+		expect(meltResult.quote.state).toBe(MeltQuoteState.PAID);
+
+		// Step 5: Verify all input proofs are marked SPENT via NUT-07
+		const states = await wallet.checkProofsStates(proofs);
+		expect(states).toHaveLength(proofs.length);
+		expect(states.every((s) => s.state === CheckStateEnum.SPENT)).toBe(true);
 	});
 });
