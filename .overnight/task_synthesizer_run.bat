@@ -8,8 +8,11 @@ set ANTHROPIC_API_KEY=
 REM Allow spawning from within a Claude Code session (e.g. testing)
 set CLAUDECODE=
 
-REM Use OAuth token for Pro subscription (env var only — no file swap to avoid race conditions)
-set CLAUDE_CODE_OAUTH_TOKEN=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
+REM Token is injected by orchestrator at spawn-time; never write secrets to disk
+if "%CLAUDE_CODE_OAUTH_TOKEN%"=="" (
+    echo ERROR: CLAUDE_CODE_OAUTH_TOKEN is not set
+    exit /b 1
+)
 
 echo ========================================
 echo TASK_SYNTHESIZER BOX v2.0.0

@@ -18,3 +18,8 @@
 - **Changes:** prisma/schema.prisma, src/db/repository.ts, src/services/mint-service.ts
 - **Commit:** 7e04a11
 - **Notes:** Added `derivationIndex` to Keyset schema, regenerated Prisma client, updated `getAllKeysets()` to order by derivation index, updated `createKeyset()` to accept `derivationIndex`. Rewrote `MintService.init()` to load ALL historical keysets from DB (not just create index 0). Added `rotateKeyset()` public method and `_createNewKeyset()` private helper. All 33 unit tests still passing.
+## Task: 001-P2-remove-dead-fastify-dependencies.md
+- **Status:** COMPLETE
+- **Changes:** package.json, package-lock.json
+- **Commit:** b156731
+- **Notes:** Removed @fastify/swagger, @fastify/swagger-ui, @fastify/websocket — 36 transitive packages dropped. 35 tests pass, typecheck clean.

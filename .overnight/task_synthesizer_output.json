@@ -3,57 +3,71 @@
   "next_box": "CONDUCTOR",
   "context": {
     "task_files": [
-      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active\\011-P1-fix-lnd-estimatefee-void-reject-bug.md",
-      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active\\012-P1-fix-getactivekeyset-plain-error.md",
-      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active\\013-P1-fix-nonnull-assertion-signoutputs.md",
-      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active\\014-P2-remove-dead-getproofstates-export.md",
-      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active\\015-P3-fix-redundant-witness-patterns.md",
-      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active\\016-P2-lnd-estimatefee-implement-estimateroutefee-rpc.md"
+      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active/001-P2-remove-dead-fastify-dependencies.md",
+      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active/002-P3-add-cashu-ts-melt-integration-test.md",
+      "C:\\code\\te-btc\\cashu-mint\\.overnight\\active/003-P3-add-lnd-backend-unit-tests.md"
     ],
-    "task_count": 6,
+    "task_count": 3,
     "tasks_by_priority": {
       "P0": 0,
-      "P1": 3,
-      "P2": 2,
-      "P3": 1
+      "P1": 0,
+      "P2": 1,
+      "P3": 2
     },
     "sources": {
-      "code_quality_audit": 5,
-      "review_audit_new_tasks": 1,
-      "project_declared": 0
+      "project_declared": 3
+    },
+    "review_summary": {
+      "total_candidates": 9,
+      "accepted": 3,
+      "deferred": 5,
+      "git_deduped": 3,
+      "audit_findings": 0,
+      "notes": "No audit output files found in .overnight \u2014 security_audit ran but found 0 issues (unproductive). All tasks synthesized from AGENT_TASKS.md pending items. 3 P1 items confirmed done via code inspection and git history (a27aa43). 5 P2 deferrals consistent with prior session audit_review.json."
     },
     "task_groups": {
-      "lnd_backend": {
-        "tasks": [
-          "011-P1-fix-lnd-estimatefee-void-reject-bug.md",
-          "016-P2-lnd-estimatefee-implement-estimateroutefee-rpc.md"
-        ],
-        "execution_hint": "sequential",
-        "reason": "Both touch lnd.ts estimateFee function. Task 011 cleans up dead code first; task 016 then implements EstimateRouteFee RPC. Do 011 before 016 to avoid conflicts."
-      },
-      "mint_service_errors": {
-        "tasks": [
-          "012-P1-fix-getactivekeyset-plain-error.md",
-          "013-P1-fix-nonnull-assertion-signoutputs.md"
-        ],
-        "execution_hint": "sequential",
-        "reason": "Both touch mint-service.ts error handling in private helper methods. Co-located changes benefit from warm context."
-      },
       "independent": {
         "tasks": [
-          "014-P2-remove-dead-getproofstates-export.md",
-          "015-P3-fix-redundant-witness-patterns.md"
+          "001-P2-remove-dead-fastify-dependencies.md"
         ],
         "execution_hint": "parallel",
-        "reason": "014 touches only repository.ts (delete dead function). 015 is a find-replace across repository.ts + mint-service.ts witness fields. No meaningful overlap."
+        "reason": "Standalone dependency removal, no file overlap with other tasks"
+      },
+      "test_coverage": {
+        "tasks": [
+          "002-P3-add-cashu-ts-melt-integration-test.md",
+          "003-P3-add-lnd-backend-unit-tests.md"
+        ],
+        "execution_hint": "sequential",
+        "reason": "Both are test additions. Melt integration test exercises the service layer that LND tests also mock. Sequential reduces context switching."
       }
     },
     "recommended_mode": "managed",
     "recommended_lanes": 2,
-    "execution_order_recommendation": [
-      "Lane 1 (mint_service_errors — sequential): 012 → 013",
-      "Lane 2 (lnd_backend — sequential): 011 → 016",
-      "After lanes complete (parallel): 014 + 015 simultaneously"
+    "git_deduped_count": 3,
+    "git_deduped": [
+      {
+        "task": "Extract actual routing fee from LND sendPayment",
+        "reason": "lnd.ts:192-193 extracts payment_route.total_fees_msat. Done.",
+        "matching_commits": [
+          "a27aa43 feat: finish cashu-mint Phase 1 gaps \u2014 NUT-08, LND fee, keyset rotation API"
+        ]
+      },
+      {
+        "task": "Advertise NUT-08 in SUPPORTED_NUTS",
+        "reason": "constants.ts:22 has '8': { supported: true }. Done.",
+        "matching_commits": [
+          "a27aa43 feat: finish cashu-mint Phase 1 gaps \u2014 NUT-08, LND fee, keyset rotation API"
+        ]
+      },
+      {
+        "task": "Add keyset rotation trigger",
+        "reason": "POST /admin/rotate-keyset registered in src/routes/admin.ts. Done.",
+        "matching_commits": [
+          "a27aa43 feat: finish cashu-mint Phase 1 gaps \u2014 NUT-08, LND fee, keyset rotation API"
+        ]
+      }
     ]
-  }
+  },
+  "_cache_key": "ea2e3bd0f5d60b28_a27aa43b1626-dirty-21b69e15_801a7b1ac53d"
 }

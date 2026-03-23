@@ -51,6 +51,43 @@ Treat PRAS "plan" type sources as highest-quality input — they've been through
 4-stage deliberation pipeline (verify → evaluate → challenge → plan) and have
 confidence scores. Prioritize these over raw findings.
 
+### Step 0c: Check Git History for Already-Completed Work
+
+The following 15 recent commits capture work already done in this project.
+**Before creating any task file**, check whether the task appears to be already completed.
+
+**Dedup rule:** If 2 or more meaningful keywords from a task title appear in the commit messages below,
+the task was likely already done. **SKIP it** and log the reason.
+
+**Keywords to ignore when matching:** implement, create, add, fix, the, for, with, and, that, this,
+from, into, task, issue, error, make, update, remove, change, ensure, handle, support (too generic).
+
+Recent commits:
+  a27aa43 feat: finish cashu-mint Phase 1 gaps â€” NUT-08, LND fee, keyset rotation API
+  0691571 chore(overnight): add session digest, task backlog, and overnight run artifacts
+  8f1fa68 fix(lnd): implement EstimateRouteFee RPC + remove dead void-reject/destBytes/paymentHash code
+  f8f9622 refactor(repo): remove dead getProofStates() export superseded by getProofStatesByY()
+  b9923f3 fix(mint-service): replace plain Error throws with typed KeysetNotFoundError
+  04d9b6d feat(test): add cashu-ts wallet integration test suite
+  76b089b feat(infra): add CORS support and harden hex/point validation at edge
+  91f3101 fix(melt-quote): check expiry in getMeltQuote â€” mirrors getMintQuote behavior
+  6b9517f feat(nut07): add isPending helper and PENDING state integration test
+  f6fcf97 feat: implement LND gRPC backend and wire invoice subscription loop
+  89e18dc fix(melt-quote): persist fee_reserve on melt quotes â€” stable NUT-05 fee
+  505c42b fix(melt): implement two-phase commit to prevent proof loss on payment failure
+  7e04a11 feat: implement keyset rotation â€” load historical keysets on startup
+  60b81b0 feat: implement Phase 1 NUT-00 through NUT-07 â€” full Cashu mint
+  19ea7c3 feat: initial scaffold â€” TypeScript Cashu mint (NUT-00 through NUT-07)
+
+**When skipping a git-deduped task**, log it in your review report under a `"git_deduped"` array:
+```json
+{"git_deduped": [{"task": "title", "reason": "git history shows likely completion", "matching_commits": ["abc1234 fix: ...", "def5678 ..."]}]}
+```
+
+**Important:** When in doubt, create the task. A false-positive skip (skipping something not done)
+is worse than a missed dedup. Only skip when you clearly see 2+ matching keywords.
+
+
 ### Step 1: Read ALL Audit Output Files
 
 Scan `C:\code\te-btc\cashu-mint\.overnight` for ALL files matching `*_output.json` — these are audit results.
@@ -103,7 +140,7 @@ For EACH finding, check:
 
 Also check for project-declared priorities:
 
-1. **`C:\code\te-btc\cashu-mint/OVERNIGHT_TASKS.md`** — Master task list (if exists)
+1. **`C:\code\te-btc\cashu-mint/AGENT_TASKS.md`** (or legacy `OVERNIGHT_TASKS.md`) — Master task list (if exists)
    - Read checkbox items: `- [ ] [P0] FIX: description` format
    - Each unchecked item is a candidate task
    - Checked items (`- [x]`) are already done — skip
@@ -143,12 +180,16 @@ Write to: C:\code\te-btc\cashu-mint\.overnight/reports/audit_review.json
   "deferrals": [
     {"finding": "description", "reason": "Nice-to-have, not blocking revenue"}
   ],
-  "project_declared": {"total": 0, "accepted": 0, "merged": 0, "rejected": 0, "deferred": 0}
+  "project_declared": {"total": 0, "accepted": 0, "merged": 0, "rejected": 0, "deferred": 0},
+  "git_deduped": [
+    {"task": "task title", "reason": "git history shows likely completion", "matching_commits": ["abc1234 fix: ..."]}
+  ]
 }
 ```
 
 In the review report, track project-declared tasks separately under the `"project_declared"` key.
-If no OVERNIGHT_TASKS.md or pre-existing active/ files were found, set all counts to 0.
+If no AGENT_TASKS.md (or legacy OVERNIGHT_TASKS.md) or pre-existing active/ files were found, set all counts to 0.
+Track git-deduped skips under `"git_deduped"` (empty array if none skipped or no git history was provided).
 
 ### Step 5b: Update Lessons (Cross-Session Memory)
 
@@ -334,7 +375,8 @@ Write to: C:\code\te-btc\cashu-mint\.overnight\task_synthesizer_output.json
       }
     },
     "recommended_mode": "managed",
-    "recommended_lanes": 3
+    "recommended_lanes": 3,
+    "git_deduped_count": 0
   }
 }
 ```

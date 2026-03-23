@@ -1,33 +1,33 @@
 {
-  "name": "discover",
+  "name": "worker_cycle",
   "steps": [
-    "RESEARCHER",
-    "FEATURE_AUDIT",
-    "GAP_ANALYZER"
+    "TASK_SYNTHESIZER",
+    "WORKER",
+    "REVIEW_AUDIT"
   ],
   "current_step_index": 3,
   "completed_steps": [
-    "RESEARCHER",
-    "FEATURE_AUDIT",
-    "GAP_ANALYZER"
+    "TASK_SYNTHESIZER",
+    "WORKER",
+    "REVIEW_AUDIT"
   ],
   "step_results": [
     {
-      "step": "RESEARCHER",
+      "step": "TASK_SYNTHESIZER",
       "success": true,
-      "completed_at": "2026-02-28T18:59:32.258147"
+      "completed_at": "2026-03-19T00:10:07.488023"
     },
     {
-      "step": "FEATURE_AUDIT",
+      "step": "WORKER",
       "success": true,
-      "completed_at": "2026-02-28T19:01:48.731249"
+      "completed_at": "2026-03-19T00:18:48.244750"
     },
     {
-      "step": "GAP_ANALYZER",
+      "step": "REVIEW_AUDIT",
       "success": true,
-      "completed_at": "2026-02-28T19:04:00.217862"
+      "completed_at": "2026-03-19T00:20:31.656197"
     }
   ],
-  "started_at": "2026-02-28T18:57:00.549334",
+  "started_at": "2026-03-19T00:05:18.289509",
   "status": "completed"
 }

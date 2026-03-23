@@ -4,11 +4,14 @@ cd /d "C:\\code\\te-btc\\cashu-mint"
 REM Clear API key to prevent fallback
 set ANTHROPIC_API_KEY=
 
-REM Use OAuth token for Pro subscription
-set CLAUDE_CODE_OAUTH_TOKEN=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
+REM Token is injected by orchestrator at spawn-time; never write secrets to disk
+if "%CLAUDE_CODE_OAUTH_TOKEN%"=="" (
+    echo ERROR: CLAUDE_CODE_OAUTH_TOKEN is not set
+    exit /b 1
+)
 
 REM Atomic credential swap (preserves mcpOAuth and other keys)
-python "C:/code/orchestrator/src/orchestrator/tools/creds_swap.py" swap --token "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" --lane-id "worker_001"
+python "C:/code/orchestrator/src/orchestrator/tools/creds_swap.py" swap --lane-id "worker_001"
 
 echo ========================================
 echo MANAGED WORKER_001 v3.0.0

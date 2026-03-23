@@ -34,7 +34,7 @@ Read all worker output files in C:\code\te-btc\cashu-mint\.overnight:
 
 For EACH task a worker claimed to complete:
 
-1. **Check git diff** - Run `git diff HEAD~5` or `git log --oneline -10` to see actual changes
+1. **Check git diff** - Use the scoped git command above (or `git log --oneline -10` if no scope) to see actual changes
 2. **Read the changed files** - Do the changes match what was claimed?
 3. **Look for fakes** (adapt to the project's language):
    - `TODO`, `FIXME`, `HACK`, `XXX` comments left behind

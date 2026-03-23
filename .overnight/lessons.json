@@ -17,7 +17,49 @@
       "finding": "Build script (npm run build) untested",
       "reason": "No CI exists yet. TypeScript already passes typecheck. Build test without CI pipeline is premature.",
       "rejected_at": "2026-02-28T00:00:00Z"
+    },
+    {
+      "source": "security_audit",
+      "finding": "CORS configured with origin: true (wildcard) — CWE-942",
+      "reason": "Intentional design for a public Cashu mint. Any wallet from any origin must be able to access the mint. credentials:false prevents cookie-based CSRF. This is the correct and expected configuration for a public mint service.",
+      "rejected_at": "2026-03-06T01:20:00Z"
+    },
+    {
+      "source": "security_audit",
+      "finding": "Private keys stored plaintext in-memory in KeysetState — CWE-312",
+      "reason": "Software-based key storage without HSM is a universal reality of this class of software. Not fixable at code level without HSM infrastructure. Document as operational security requirement. Phase 2+ concern.",
+      "rejected_at": "2026-03-06T01:20:00Z"
+    },
+    {
+      "source": "security_audit",
+      "finding": "NUT-12 DLEQ proof generation not implemented — CWE-347",
+      "reason": "Explicitly Phase 2 per ROADMAP. The stub is marked 'Not implemented — Phase 2'. Deferred intentionally. Not a bug in Phase 1.",
+      "rejected_at": "2026-03-06T01:20:00Z"
+    },
+    {
+      "source": "project_declared",
+      "finding": "Verify LND subscribeInvoices reconnect resilience — TLS/macaroon auth error handling",
+      "reason": "No actionable code change without live LND infrastructure. 5s backoff catch-all exists in server.ts. Stream error handling in lnd.ts throws LightningBackendError which triggers restart. Deferred until LND test environment available.",
+      "rejected_at": "2026-03-19T00:10:00Z"
+    },
+    {
+      "source": "project_declared",
+      "finding": "Add runtime guard for LND gRPC package loading (lnd.ts:47 double-cast)",
+      "reason": "Necessary pattern for untyped gRPC proto bindings. No type-safe alternative without switching gRPC client libraries. Low risk — constructor throws immediately if proto invalid.",
+      "rejected_at": "2026-03-19T00:10:00Z"
+    },
+    {
+      "source": "project_declared",
+      "finding": "Split meltTokens() into sub-methods (108 lines)",
+      "reason": "Readability refactor, not a bug. Not blocking any functionality. Low priority relative to test coverage gaps.",
+      "rejected_at": "2026-03-19T00:10:00Z"
     }
   ],
-  "unproductive_audits": []
+  "unproductive_audits": [
+    {
+      "audit": "security_audit",
+      "session": "2026-03-19",
+      "reason": "Found 0 actionable findings. All previously identified issues (CORS wildcard, plaintext keys, DLEQ stub) already in lessons as intentional design decisions."
+    }
+  ]
 }

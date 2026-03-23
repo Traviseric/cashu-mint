@@ -1,250 +1,31 @@
-{"ts": "2026-03-01T01:56:17.494511+00:00", "type": "run_start", "run_id": "run_20260228_185616"}
-{"ts": "2026-03-01T01:56:18.199172+00:00", "type": "box_start", "box": "CONDUCTOR", "phase": "discovery", "round": 1}
-{"ts": "2026-03-01T01:56:59.897264+00:00", "type": "box_complete", "box": "CONDUCTOR", "success": true, "next_box": "WORKFLOW:discover", "duration_s": 41.0}
-{"ts": "2026-03-01T01:57:00.552063+00:00", "type": "box_start", "box": "RESEARCHER", "phase": "discovery", "round": 1}
-{"ts": "2026-03-01T01:59:31.662329+00:00", "type": "box_complete", "box": "RESEARCHER", "success": true, "next_box": null, "duration_s": 150.6}
-{"ts": "2026-03-01T01:59:32.259881+00:00", "type": "box_start", "box": "FEATURE_AUDIT", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:01:48.323934+00:00", "type": "box_complete", "box": "FEATURE_AUDIT", "success": true, "next_box": null, "duration_s": 135.5}
-{"ts": "2026-03-01T02:01:48.732924+00:00", "type": "box_start", "box": "GAP_ANALYZER", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:03:59.727307+00:00", "type": "box_complete", "box": "GAP_ANALYZER", "success": true, "next_box": null, "duration_s": 130.4}
-{"ts": "2026-03-01T02:04:00.218881+00:00", "type": "progress", "total": 0, "fixed": 0, "remaining": 0, "phase": "audit", "stuck_rounds": 1, "status": "in_progress"}
-{"ts": "2026-03-01T02:04:00.648486+00:00", "type": "box_start", "box": "CONDUCTOR", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:05:06.574916+00:00", "type": "box_complete", "box": "CONDUCTOR", "success": true, "next_box": "TASK_SYNTHESIZER", "duration_s": 65.4}
-{"ts": "2026-03-01T02:05:07.022231+00:00", "type": "progress", "total": 0, "fixed": 0, "remaining": 0, "phase": "audit", "stuck_rounds": 2, "status": "in_progress"}
-{"ts": "2026-03-01T02:05:07.426695+00:00", "type": "box_start", "box": "TASK_SYNTHESIZER", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:10:38.393583+00:00", "type": "box_complete", "box": "TASK_SYNTHESIZER", "success": true, "next_box": "WORKER", "duration_s": 330.6}
-{"ts": "2026-03-01T02:10:39.107182+00:00", "type": "progress", "total": 0, "fixed": 0, "remaining": 0, "phase": "synthesize", "stuck_rounds": 1, "status": "in_progress"}
-{"ts": "2026-03-01T02:10:39.531892+00:00", "type": "box_start", "box": "WORKER", "phase": "synthesize", "round": 1}
-{"ts": "2026-03-01T02:10:40.060450+00:00", "type": "worker_start", "lane": 1, "task": "active"}
-{"ts": "2026-03-01T02:10:55.731410+00:00", "type": "worker_start", "lane": 2, "task": "active"}
-{"ts": "2026-03-01T02:11:11.261645+00:00", "type": "worker_start", "lane": 3, "task": "active"}
-{"ts": "2026-03-01T02:13:57.273096+00:00", "type": "worker_complete", "lane": 3, "success": true, "tasks_completed": 1}
-{"ts": "2026-03-01T02:20:11.970555+00:00", "type": "worker_complete", "lane": 2, "success": true, "tasks_completed": 1}
-{"ts": "2026-03-01T02:22:29.573943+00:00", "type": "worker_complete", "lane": 1, "success": true, "tasks_completed": 4}
-{"ts": "2026-03-01T02:22:30.262058+00:00", "type": "worker_start", "lane": 1, "task": "active"}
-{"ts": "2026-03-01T02:24:29.656074+00:00", "type": "worker_complete", "lane": 1, "success": true, "tasks_completed": 1}
-{"ts": "2026-03-01T02:24:30.538310+00:00", "type": "worker_start", "lane": 1, "task": "active"}
-{"ts": "2026-03-01T02:30:57.965245+00:00", "type": "worker_complete", "lane": 1, "success": true, "tasks_completed": 1}
-{"ts": "2026-03-01T02:30:58.702836+00:00", "type": "box_complete", "box": "WORKER", "success": true, "next_box": "CONDUCTOR", "duration_s": 1218.8}
-{"ts": "2026-03-01T02:30:59.379813+00:00", "type": "progress", "total": 8, "fixed": 8, "remaining": 0, "phase": "execute", "stuck_rounds": 0, "status": "in_progress"}
-{"ts": "2026-03-01T02:30:59.766180+00:00", "type": "box_start", "box": "CONDUCTOR", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T02:32:25.507905+00:00", "type": "box_complete", "box": "CONDUCTOR", "success": true, "next_box": "REVIEW_AUDIT", "duration_s": 85.4}
-{"ts": "2026-03-01T02:32:25.996116+00:00", "type": "progress", "total": 8, "fixed": 8, "remaining": 0, "phase": "execute", "stuck_rounds": 1, "status": "in_progress"}
-{"ts": "2026-03-01T02:32:26.384467+00:00", "type": "box_start", "box": "REVIEW_AUDIT", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T02:36:42.433229+00:00", "type": "box_complete", "box": "REVIEW_AUDIT", "success": true, "next_box": "CONDUCTOR", "duration_s": 255.6}
-{"ts": "2026-03-01T02:36:43.155680+00:00", "type": "progress", "total": 10, "fixed": 8, "remaining": 2, "phase": "audit", "stuck_rounds": 0, "status": "in_progress"}
-{"ts": "2026-03-01T02:36:43.603244+00:00", "type": "box_start", "box": "CONDUCTOR", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:37:59.517045+00:00", "type": "box_complete", "box": "CONDUCTOR", "success": true, "next_box": "CODE_QUALITY_AUDIT", "duration_s": 75.4}
-{"ts": "2026-03-01T02:38:01.991754+00:00", "type": "progress", "total": 10, "fixed": 8, "remaining": 2, "phase": "audit", "stuck_rounds": 1, "status": "in_progress"}
-{"ts": "2026-03-01T02:38:02.411628+00:00", "type": "box_start", "box": "CODE_QUALITY_AUDIT", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:40:38.226100+00:00", "type": "box_complete", "box": "CODE_QUALITY_AUDIT", "success": true, "next_box": "CONDUCTOR", "duration_s": 155.4}
-{"ts": "2026-03-01T02:40:38.871552+00:00", "type": "progress", "total": 16, "fixed": 8, "remaining": 8, "phase": "audit", "stuck_rounds": 0, "status": "in_progress"}
-{"ts": "2026-03-01T02:40:39.277146+00:00", "type": "box_start", "box": "CONDUCTOR", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:41:55.182080+00:00", "type": "box_complete", "box": "CONDUCTOR", "success": true, "next_box": "TASK_SYNTHESIZER", "duration_s": 75.4}
-{"ts": "2026-03-01T02:41:55.882759+00:00", "type": "progress", "total": 16, "fixed": 8, "remaining": 8, "phase": "audit", "stuck_rounds": 1, "status": "in_progress"}
-{"ts": "2026-03-01T02:41:56.300802+00:00", "type": "box_start", "box": "TASK_SYNTHESIZER", "phase": "audit", "round": 1}
-{"ts": "2026-03-01T02:47:27.215072+00:00", "type": "box_complete", "box": "TASK_SYNTHESIZER", "success": true, "next_box": "WORKER", "duration_s": 330.6}
-{"ts": "2026-03-01T02:47:27.891234+00:00", "type": "progress", "total": 16, "fixed": 8, "remaining": 8, "phase": "synthesize", "stuck_rounds": 0, "status": "in_progress"}
-{"ts": "2026-03-01T02:47:28.283319+00:00", "type": "box_start", "box": "WORKER", "phase": "synthesize", "round": 1}
-{"ts": "2026-03-01T02:47:28.810312+00:00", "type": "worker_start", "lane": 1, "task": "active"}
-{"ts": "2026-03-01T02:47:44.244136+00:00", "type": "worker_start", "lane": 2, "task": "active"}
-{"ts": "2026-03-01T02:47:59.597707+00:00", "type": "worker_start", "lane": 3, "task": "active"}
-{"ts": "2026-03-01T02:49:30.572676+00:00", "type": "worker_complete", "lane": 3, "success": true, "tasks_completed": 1}
-{"ts": "2026-03-01T02:49:41.372025+00:00", "type": "worker_complete", "lane": 2, "success": true, "tasks_completed": 1}
-{"ts": "2026-03-01T02:52:46.482921+00:00", "type": "worker_complete", "lane": 1, "success": true, "tasks_completed": 1}
-{"ts": "2026-03-01T02:52:47.311772+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 4, "recent_history": ["CONDUCTOR", "REVIEW_AUDIT", "CONDUCTOR", "CODE_QUALITY_AUDIT", "CONDUCTOR", "TASK_SYNTHESIZER", "WORKER", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T02:52:47.312045+00:00", "type": "box_complete", "box": "WORKER", "success": true, "next_box": "DIGEST", "duration_s": 318.7}
-{"ts": "2026-03-01T02:52:47.980881+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 0, "status": "in_progress"}
-{"ts": "2026-03-01T02:52:48.421911+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T02:54:54.205208+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 4, "recent_history": ["REVIEW_AUDIT", "CONDUCTOR", "CODE_QUALITY_AUDIT", "CONDUCTOR", "TASK_SYNTHESIZER", "WORKER", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T02:54:54.205469+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 125.4}
-{"ts": "2026-03-01T02:54:54.817906+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 1, "status": "in_progress"}
-{"ts": "2026-03-01T02:54:55.204092+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T02:57:21.123615+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 5, "recent_history": ["CONDUCTOR", "CODE_QUALITY_AUDIT", "CONDUCTOR", "TASK_SYNTHESIZER", "WORKER", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T02:57:21.123887+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 145.4}
-{"ts": "2026-03-01T02:57:21.960881+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 2, "status": "in_progress"}
-{"ts": "2026-03-01T02:57:22.368115+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T02:59:08.291595+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 5, "recent_history": ["CODE_QUALITY_AUDIT", "CONDUCTOR", "TASK_SYNTHESIZER", "WORKER", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T02:59:08.291894+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 105.4}
-{"ts": "2026-03-01T02:59:08.707706+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 3, "status": "in_progress"}
-{"ts": "2026-03-01T02:59:09.128622+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:00:29.845457+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 6, "recent_history": ["CONDUCTOR", "TASK_SYNTHESIZER", "WORKER", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:00:29.845722+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 80.4}
-{"ts": "2026-03-01T03:00:30.509601+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 4, "status": "in_progress"}
-{"ts": "2026-03-01T03:00:30.920376+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:01:36.645308+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 6, "recent_history": ["TASK_SYNTHESIZER", "WORKER", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:01:36.645627+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 65.4}
-{"ts": "2026-03-01T03:01:37.256870+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 5, "status": "in_progress"}
-{"ts": "2026-03-01T03:01:37.664163+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:02:48.484241+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 7, "recent_history": ["WORKER", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:02:48.484690+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 70.4}
-{"ts": "2026-03-01T03:02:48.919286+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 6, "status": "in_progress"}
-{"ts": "2026-03-01T03:02:49.351831+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:04:05.336239+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:04:05.336502+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 75.4}
-{"ts": "2026-03-01T03:04:05.807200+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 7, "status": "in_progress"}
-{"ts": "2026-03-01T03:04:06.227449+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:05:21.929379+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:05:21.929740+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 75.4}
-{"ts": "2026-03-01T03:05:22.547521+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 8, "status": "plateaued"}
-{"ts": "2026-03-01T03:05:22.963688+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:07:33.806353+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:07:33.806626+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 130.4}
-{"ts": "2026-03-01T03:07:34.445466+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 9, "status": "plateaued"}
-{"ts": "2026-03-01T03:07:34.875353+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:08:55.751454+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:08:55.751788+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 80.4}
-{"ts": "2026-03-01T03:08:56.399074+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 10, "status": "plateaued"}
-{"ts": "2026-03-01T03:08:57.044304+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:10:07.935006+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:10:07.935318+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 70.4}
-{"ts": "2026-03-01T03:10:08.496448+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 11, "status": "plateaued"}
-{"ts": "2026-03-01T03:10:08.926135+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:11:39.807394+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:11:39.807721+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 90.4}
-{"ts": "2026-03-01T03:11:40.395342+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 12, "status": "plateaued"}
-{"ts": "2026-03-01T03:11:40.818757+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:12:41.474809+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:12:41.475131+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 60.3}
-{"ts": "2026-03-01T03:12:42.032830+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 13, "status": "plateaued"}
-{"ts": "2026-03-01T03:12:42.435434+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:14:38.129117+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:14:38.129545+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 115.4}
-{"ts": "2026-03-01T03:14:39.545477+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 14, "status": "plateaued"}
-{"ts": "2026-03-01T03:14:40.000454+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:16:00.755154+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:16:00.755415+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 80.4}
-{"ts": "2026-03-01T03:16:01.225655+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 15, "status": "plateaued"}
-{"ts": "2026-03-01T03:16:01.641705+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:17:27.403332+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:17:27.403654+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 85.4}
-{"ts": "2026-03-01T03:17:28.185329+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 16, "status": "plateaued"}
-{"ts": "2026-03-01T03:17:28.696325+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:18:54.417013+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:18:54.417319+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 85.4}
-{"ts": "2026-03-01T03:18:54.894251+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 17, "status": "plateaued"}
-{"ts": "2026-03-01T03:18:55.308634+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:20:26.289559+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:20:26.289882+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 90.5}
-{"ts": "2026-03-01T03:20:26.732761+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 18, "status": "plateaued"}
-{"ts": "2026-03-01T03:20:27.154275+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:22:02.864958+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:22:02.865278+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 95.4}
-{"ts": "2026-03-01T03:22:03.461031+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 19, "status": "plateaued"}
-{"ts": "2026-03-01T03:22:03.892928+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:23:19.609821+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:23:19.610100+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 75.4}
-{"ts": "2026-03-01T03:23:20.347580+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 20, "status": "plateaued"}
-{"ts": "2026-03-01T03:23:20.782380+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:24:31.665419+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:24:31.665696+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 70.4}
-{"ts": "2026-03-01T03:24:32.274411+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 21, "status": "plateaued"}
-{"ts": "2026-03-01T03:24:32.934765+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:25:28.609205+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:25:28.609515+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 55.3}
-{"ts": "2026-03-01T03:25:29.086380+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 22, "status": "plateaued"}
-{"ts": "2026-03-01T03:25:29.514346+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:26:50.396136+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:26:50.396488+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 80.4}
-{"ts": "2026-03-01T03:26:51.023927+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 23, "status": "plateaued"}
-{"ts": "2026-03-01T03:26:51.438617+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:27:27.143200+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:27:27.143483+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 35.3}
-{"ts": "2026-03-01T03:27:27.604929+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 24, "status": "plateaued"}
-{"ts": "2026-03-01T03:27:28.023742+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:28:18.870735+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:28:18.871025+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 50.3}
-{"ts": "2026-03-01T03:28:19.352584+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 25, "status": "plateaued"}
-{"ts": "2026-03-01T03:28:19.786934+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:29:30.522057+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:29:30.522328+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 70.4}
-{"ts": "2026-03-01T03:29:31.203316+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 26, "status": "plateaued"}
-{"ts": "2026-03-01T03:29:31.921350+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:30:57.651071+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:30:57.651605+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 85.4}
-{"ts": "2026-03-01T03:30:58.280414+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 27, "status": "plateaued"}
-{"ts": "2026-03-01T03:30:58.708830+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:32:14.613722+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:32:14.614031+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 75.4}
-{"ts": "2026-03-01T03:32:15.240616+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 28, "status": "plateaued"}
-{"ts": "2026-03-01T03:32:15.687636+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:33:41.498787+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:33:41.499066+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 85.4}
-{"ts": "2026-03-01T03:33:42.107782+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 29, "status": "plateaued"}
-{"ts": "2026-03-01T03:33:42.531862+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:34:18.201862+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:34:18.202308+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 35.3}
-{"ts": "2026-03-01T03:34:18.647950+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 30, "status": "plateaued"}
-{"ts": "2026-03-01T03:34:19.055780+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:35:29.752152+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:35:29.752568+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 70.4}
-{"ts": "2026-03-01T03:35:30.240940+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 31, "status": "plateaued"}
-{"ts": "2026-03-01T03:35:30.670524+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:36:06.512994+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:36:06.513439+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 35.3}
-{"ts": "2026-03-01T03:36:07.130927+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 32, "status": "plateaued"}
-{"ts": "2026-03-01T03:36:07.567233+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:38:03.296929+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:38:03.297173+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 115.4}
-{"ts": "2026-03-01T03:38:03.909102+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 33, "status": "plateaued"}
-{"ts": "2026-03-01T03:38:04.335322+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:39:35.234311+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:39:35.234563+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 90.4}
-{"ts": "2026-03-01T03:39:35.845751+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 34, "status": "plateaued"}
-{"ts": "2026-03-01T03:39:36.243124+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:40:47.008511+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:40:47.008777+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 70.4}
-{"ts": "2026-03-01T03:40:47.600522+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 35, "status": "plateaued"}
-{"ts": "2026-03-01T03:40:48.004512+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:41:48.805104+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:41:48.805374+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 60.4}
-{"ts": "2026-03-01T03:41:49.296225+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 36, "status": "plateaued"}
-{"ts": "2026-03-01T03:41:49.739145+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:44:25.532527+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:44:25.532808+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 155.4}
-{"ts": "2026-03-01T03:44:26.241866+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 37, "status": "plateaued"}
-{"ts": "2026-03-01T03:44:26.672409+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:46:07.451697+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:46:07.452171+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 100.4}
-{"ts": "2026-03-01T03:46:08.031388+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 38, "status": "plateaued"}
-{"ts": "2026-03-01T03:46:08.489784+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:47:24.463513+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:47:24.463896+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 75.4}
-{"ts": "2026-03-01T03:47:25.091302+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 39, "status": "plateaued"}
-{"ts": "2026-03-01T03:47:25.502208+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:48:51.268244+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:48:51.268687+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 85.4}
-{"ts": "2026-03-01T03:48:51.899635+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 40, "status": "plateaued"}
-{"ts": "2026-03-01T03:48:52.329504+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:50:18.067455+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:50:18.067732+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 85.4}
-{"ts": "2026-03-01T03:50:18.457588+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 41, "status": "plateaued"}
-{"ts": "2026-03-01T03:50:18.886959+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:51:49.776967+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:51:49.777467+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 90.4}
-{"ts": "2026-03-01T03:51:50.227555+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 42, "status": "plateaued"}
-{"ts": "2026-03-01T03:51:50.671725+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:53:21.382694+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T03:53:21.382965+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 90.4}
-{"ts": "2026-03-01T03:53:22.071402+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 43, "status": "plateaued"}
-{"ts": "2026-03-01T03:53:22.515804+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T03:58:23.452959+00:00", "type": "box_complete", "box": "DIGEST", "success": false, "next_box": "DIGEST", "duration_s": 300.5}
-{"ts": "2026-03-01T03:58:25.119649+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T04:03:26.014141+00:00", "type": "box_complete", "box": "DIGEST", "success": false, "next_box": "DIGEST", "duration_s": 300.5}
-{"ts": "2026-03-01T04:03:28.728743+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T04:05:09.649444+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T04:05:09.649679+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 100.4}
-{"ts": "2026-03-01T04:05:10.265630+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 44, "status": "plateaued"}
-{"ts": "2026-03-01T04:05:11.662032+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T04:07:07.542409+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T04:07:07.542803+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 115.4}
-{"ts": "2026-03-01T04:07:08.139405+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 45, "status": "plateaued"}
-{"ts": "2026-03-01T04:07:08.613668+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T04:08:59.362506+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T04:08:59.362812+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 110.4}
-{"ts": "2026-03-01T04:08:59.860414+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 46, "status": "plateaued"}
-{"ts": "2026-03-01T04:09:00.342451+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
-{"ts": "2026-03-01T04:10:56.040080+00:00", "type": "circuit_breaker", "pattern": "repeated_box", "box": "CONDUCTOR", "count": 8, "recent_history": ["CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR", "CONDUCTOR"], "override": "DIGEST"}
-{"ts": "2026-03-01T04:10:56.040595+00:00", "type": "box_complete", "box": "DIGEST", "success": true, "next_box": "DIGEST", "duration_s": 115.4}
-{"ts": "2026-03-01T04:10:56.633808+00:00", "type": "progress", "total": 16, "fixed": 3, "remaining": 13, "phase": "execute", "stuck_rounds": 47, "status": "plateaued"}
-{"ts": "2026-03-01T04:10:57.070411+00:00", "type": "box_start", "box": "DIGEST", "phase": "execute", "round": 1}
+{"ts": "2026-03-19T06:05:17.643316+00:00", "type": "run_start", "run_id": "run_20260319_000515"}
+{"ts": "2026-03-19T06:05:18.293507+00:00", "type": "box_start", "box": "TASK_SYNTHESIZER", "phase": "synthesize", "round": 1}
+{"ts": "2026-03-19T06:05:21.791233+00:00", "type": "claude_session", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "TASK_SYNTHESIZER", "lane": null, "account_id": "claude-max-1772470724379", "pane_id": 10, "model_hint": "sonnet", "spawn_mode": "standard", "lookup_started_at": "2026-03-19T06:05:18.750958+00:00", "session_dir": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint", "session_id": "03d16c8b-3eb9-4f68-923c-560cd905c6cc", "session_path": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\03d16c8b-3eb9-4f68-923c-560cd905c6cc.jsonl", "session_mtime": "2026-03-19T06:05:21.765403+00:00", "candidate_count": 1, "candidate_ids": ["03d16c8b-3eb9-4f68-923c-560cd905c6cc"], "captured_session_id": null, "attribution_confidence": "time_inferred", "reason": "matched_recent_session"}
+{"ts": "2026-03-19T06:05:21.792934+00:00", "type": "session_registered", "box": "TASK_SYNTHESIZER", "lane": null, "session_id": "03d16c8b-3eb9-4f68-923c-560cd905c6cc", "session_file": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\03d16c8b-3eb9-4f68-923c-560cd905c6cc.jsonl", "oauth_account": "claude-max-1772470724379", "started_at": "2026-03-19T06:05:18.750958+00:00", "confidence": "time_inferred", "reason": "matched_recent_session", "pane_id": 10, "spawn_mode": "standard", "model_hint": "sonnet"}
+{"ts": "2026-03-19T06:10:06.982909+00:00", "type": "session_complete", "box": "TASK_SYNTHESIZER", "session_id": "03d16c8b-3eb9-4f68-923c-560cd905c6cc", "tokens_input": 64, "tokens_output": 3801, "tokens_cache_read": 1372765, "completed_at": "2026-03-19T06:10:06.978924+00:00"}
+{"ts": "2026-03-19T06:10:06.994382+00:00", "type": "box_complete", "box": "TASK_SYNTHESIZER", "success": true, "next_box": null, "duration_s": 288.4, "tokens_input": 64, "tokens_output": 3801, "tokens_cache_read": 1372765, "cost_usd": 3.47}
+{"ts": "2026-03-19T06:10:07.663568+00:00", "type": "worker_start", "lane": 2, "task": "active"}
+{"ts": "2026-03-19T06:10:10.486497+00:00", "type": "claude_session", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_002", "lane": 2, "account_id": "claude-max-1772470724379", "pane_id": 11, "model_hint": "sonnet", "spawn_mode": "standard", "lookup_started_at": "2026-03-19T06:10:08.013606+00:00", "session_dir": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint", "session_id": "e3cf9fdc-e353-4c40-9d16-14bef8193b55", "session_path": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\e3cf9fdc-e353-4c40-9d16-14bef8193b55.jsonl", "session_mtime": "2026-03-19T06:10:10.441253+00:00", "candidate_count": 1, "candidate_ids": ["e3cf9fdc-e353-4c40-9d16-14bef8193b55"], "captured_session_id": null, "attribution_confidence": "time_inferred", "reason": "matched_recent_session"}
+{"ts": "2026-03-19T06:10:10.486762+00:00", "type": "session_registered", "box": "WORKER_002", "lane": 2, "session_id": "e3cf9fdc-e353-4c40-9d16-14bef8193b55", "session_file": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\e3cf9fdc-e353-4c40-9d16-14bef8193b55.jsonl", "oauth_account": "claude-max-1772470724379", "started_at": "2026-03-19T06:10:08.013606+00:00", "confidence": "time_inferred", "reason": "matched_recent_session", "pane_id": 11, "spawn_mode": "standard", "model_hint": "sonnet"}
+{"ts": "2026-03-19T06:10:22.920765+00:00", "type": "worker_start", "lane": 1, "task": "active"}
+{"ts": "2026-03-19T06:10:23.759486+00:00", "type": "claude_session", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "account_id": "claude-max-1772470724379", "pane_id": 12, "model_hint": "sonnet", "spawn_mode": "managed", "lookup_started_at": "2026-03-19T06:10:23.222982+00:00", "session_dir": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint", "session_id": "e3cf9fdc-e353-4c40-9d16-14bef8193b55", "session_path": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\e3cf9fdc-e353-4c40-9d16-14bef8193b55.jsonl", "session_mtime": "2026-03-19T06:10:23.434269+00:00", "candidate_count": 1, "candidate_ids": ["e3cf9fdc-e353-4c40-9d16-14bef8193b55"], "captured_session_id": null, "attribution_confidence": "time_inferred", "reason": "matched_recent_session"}
+{"ts": "2026-03-19T06:10:23.759802+00:00", "type": "session_registered", "box": "WORKER_001", "lane": 1, "session_id": "e3cf9fdc-e353-4c40-9d16-14bef8193b55", "session_file": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\e3cf9fdc-e353-4c40-9d16-14bef8193b55.jsonl", "oauth_account": "claude-max-1772470724379", "started_at": "2026-03-19T06:10:23.222982+00:00", "confidence": "time_inferred", "reason": "matched_recent_session", "pane_id": 12, "spawn_mode": "managed", "model_hint": "sonnet"}
+{"ts": "2026-03-19T06:10:34.415147+00:00", "type": "claude_session", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "account_id": "claude-max-1772470724379", "pane_id": 12, "model_hint": "sonnet", "spawn_mode": "managed_initial_prompt", "lookup_started_at": "2026-03-19T06:10:31.760477+00:00", "session_dir": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_path": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\7cda1a74-f774-4b75-93c7-6f592dac8753.jsonl", "session_mtime": "2026-03-19T06:10:33.484279+00:00", "candidate_count": 1, "candidate_ids": ["7cda1a74-f774-4b75-93c7-6f592dac8753"], "captured_session_id": null, "attribution_confidence": "time_inferred", "reason": "matched_recent_session"}
+{"ts": "2026-03-19T06:10:34.415443+00:00", "type": "session_registered", "box": "WORKER_001", "lane": 1, "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_file": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\7cda1a74-f774-4b75-93c7-6f592dac8753.jsonl", "oauth_account": "claude-max-1772470724379", "started_at": "2026-03-19T06:10:31.760477+00:00", "confidence": "time_inferred", "reason": "matched_recent_session", "pane_id": 12, "spawn_mode": "managed_initial_prompt", "model_hint": "sonnet"}
+{"ts": "2026-03-19T06:10:50.329574+00:00", "type": "claude_session", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "account_id": "claude-max-1772470724379", "pane_id": 12, "model_hint": "sonnet", "spawn_mode": "managed_task_start", "lookup_started_at": "2026-03-19T06:10:49.720383+00:00", "session_dir": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_path": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\7cda1a74-f774-4b75-93c7-6f592dac8753.jsonl", "session_mtime": "2026-03-19T06:10:49.863144+00:00", "candidate_count": 1, "candidate_ids": ["7cda1a74-f774-4b75-93c7-6f592dac8753"], "captured_session_id": null, "attribution_confidence": "time_inferred", "reason": "matched_recent_session"}
+{"ts": "2026-03-19T06:10:50.329842+00:00", "type": "session_registered", "box": "WORKER_001", "lane": 1, "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_file": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\7cda1a74-f774-4b75-93c7-6f592dac8753.jsonl", "oauth_account": "claude-max-1772470724379", "started_at": "2026-03-19T06:10:49.720383+00:00", "confidence": "time_inferred", "reason": "matched_recent_session", "pane_id": 12, "spawn_mode": "managed_task_start", "model_hint": "sonnet"}
+{"ts": "2026-03-19T06:10:50.330044+00:00", "type": "managed_task_start", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "pane_id": 12, "account_id": "claude-max-1772470724379", "task_name": "002-P3-add-cashu-ts-melt-integration-test.md", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_confidence": "time_inferred"}
+{"ts": "2026-03-19T06:11:55.617479+00:00", "type": "session_complete", "box": "WORKER_002", "session_id": "e3cf9fdc-e353-4c40-9d16-14bef8193b55", "tokens_input": 15, "tokens_output": 1221, "tokens_cache_read": 303227, "completed_at": "2026-03-19T06:11:55.616019+00:00"}
+{"ts": "2026-03-19T06:11:55.627086+00:00", "type": "worker_complete", "lane": 2, "success": true, "tasks_completed": 1}
+{"ts": "2026-03-19T06:15:40.727319+00:00", "type": "managed_task_complete", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "pane_id": 12, "account_id": "claude-max-1772470724379", "task_name": "002-P3-add-cashu-ts-melt-integration-test.md", "success": true, "status": "completed", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_confidence": "time_inferred"}
+{"ts": "2026-03-19T06:15:54.512588+00:00", "type": "claude_session", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "account_id": "claude-max-1772470724379", "pane_id": 12, "model_hint": "sonnet", "spawn_mode": "managed_task_start", "lookup_started_at": "2026-03-19T06:15:53.893794+00:00", "session_dir": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_path": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\7cda1a74-f774-4b75-93c7-6f592dac8753.jsonl", "session_mtime": "2026-03-19T06:15:54.041594+00:00", "candidate_count": 1, "candidate_ids": ["7cda1a74-f774-4b75-93c7-6f592dac8753"], "captured_session_id": null, "attribution_confidence": "time_inferred", "reason": "matched_recent_session"}
+{"ts": "2026-03-19T06:15:54.512879+00:00", "type": "session_registered", "box": "WORKER_001", "lane": 1, "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_file": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\7cda1a74-f774-4b75-93c7-6f592dac8753.jsonl", "oauth_account": "claude-max-1772470724379", "started_at": "2026-03-19T06:15:53.893794+00:00", "confidence": "time_inferred", "reason": "matched_recent_session", "pane_id": 12, "spawn_mode": "managed_task_start", "model_hint": "sonnet"}
+{"ts": "2026-03-19T06:15:54.513067+00:00", "type": "managed_task_start", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "pane_id": 12, "account_id": "claude-max-1772470724379", "task_name": "003-P3-add-lnd-backend-unit-tests.md", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_confidence": "time_inferred"}
+{"ts": "2026-03-19T06:18:24.674827+00:00", "type": "managed_task_complete", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "WORKER_001", "lane": 1, "pane_id": 12, "account_id": "claude-max-1772470724379", "task_name": "003-P3-add-lnd-backend-unit-tests.md", "success": true, "status": "completed", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "session_confidence": "time_inferred"}
+{"ts": "2026-03-19T06:18:24.677126+00:00", "type": "session_complete", "box": "WORKER_001", "session_id": "7cda1a74-f774-4b75-93c7-6f592dac8753", "tokens_input": 974, "tokens_output": 3473, "tokens_cache_read": 1636339, "completed_at": "2026-03-19T06:18:24.675151+00:00"}
+{"ts": "2026-03-19T06:18:45.421393+00:00", "type": "worker_complete", "lane": 1, "success": true, "tasks_completed": 2}
+{"ts": "2026-03-19T06:18:48.245958+00:00", "type": "box_start", "box": "REVIEW_AUDIT", "phase": "audit", "round": 1}
+{"ts": "2026-03-19T06:18:51.085684+00:00", "type": "claude_session", "run_id": "run_20260319_000515", "project": "cashu-mint", "box": "REVIEW_AUDIT", "lane": null, "account_id": "claude-max-1772470724379", "pane_id": 13, "model_hint": "opus", "spawn_mode": "standard", "lookup_started_at": "2026-03-19T06:18:48.620361+00:00", "session_dir": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint", "session_id": "6bc1c90f-5803-4b94-93da-fc5b8832ccd7", "session_path": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\6bc1c90f-5803-4b94-93da-fc5b8832ccd7.jsonl", "session_mtime": "2026-03-19T06:18:50.951180+00:00", "candidate_count": 1, "candidate_ids": ["6bc1c90f-5803-4b94-93da-fc5b8832ccd7"], "captured_session_id": null, "attribution_confidence": "time_inferred", "reason": "matched_recent_session"}
+{"ts": "2026-03-19T06:18:51.086039+00:00", "type": "session_registered", "box": "REVIEW_AUDIT", "lane": null, "session_id": "6bc1c90f-5803-4b94-93da-fc5b8832ccd7", "session_file": "C:\\Users\\Gaming pc\\.claude\\projects\\C--code-te-btc-cashu-mint\\6bc1c90f-5803-4b94-93da-fc5b8832ccd7.jsonl", "oauth_account": "claude-max-1772470724379", "started_at": "2026-03-19T06:18:48.620361+00:00", "confidence": "time_inferred", "reason": "matched_recent_session", "pane_id": 13, "spawn_mode": "standard", "model_hint": "opus"}
+{"ts": "2026-03-19T06:20:31.156240+00:00", "type": "session_complete", "box": "REVIEW_AUDIT", "session_id": "6bc1c90f-5803-4b94-93da-fc5b8832ccd7", "tokens_input": 11, "tokens_output": 157, "tokens_cache_read": 214226, "completed_at": "2026-03-19T06:20:31.154786+00:00"}
+{"ts": "2026-03-19T06:20:31.167547+00:00", "type": "box_complete", "box": "REVIEW_AUDIT", "success": true, "next_box": null, "duration_s": 102.6, "tokens_input": 11, "tokens_output": 157, "tokens_cache_read": 214226, "cost_usd": 0.77}
