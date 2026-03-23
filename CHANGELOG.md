@@ -8,5 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial Cashu mint implementation
-- Documentation and specs
+- Phase 1 complete: NUT-00 through NUT-07 full Cashu mint implementation
+- NUT-08 token swap support
+- LND gRPC backend with invoice subscription loop
+- LND fee estimation via EstimateRouteFee RPC
+- Keyset rotation — load historical keysets on startup
+- Two-phase commit for melt to prevent proof loss on payment failure
+- CORS support and hex/point validation at edge
+- isPending helper and PENDING state integration test (NUT-07)
+- cashu-ts wallet integration test suite
+- LndBackend unit tests with mocked gRPC client
+- cashu-ts melt flow integration test
+- AGENTS.md entrypoint contract
+
+### Changed
+- Removed dead @fastify/swagger, swagger-ui, websocket dependencies
+- Removed dead getProofStates() export (superseded by getProofStatesByY())
+- Removed dead void-reject/destBytes/paymentHash code from LND backend
+
+### Fixed
+- Melt quote expiry check — mirrors getMintQuote behavior
+- fee_reserve persistence on melt quotes (stable NUT-05 fee)
+- Plain Error throws replaced with typed KeysetNotFoundError
