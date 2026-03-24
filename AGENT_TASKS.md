@@ -7,10 +7,10 @@
 - [ ] P0: Run UX_AUDIT — NUT spec response format compliance, error code alignment with Cashu protocol spec, /v1/info discoverability
 
 ### P1 — Production Gaps
-- [ ] P1: Extract actual routing fee from LND sendPayment — `src/lightning/lnd.ts:188` hardcodes `fee: 0`; extract `payment_route.total_fees_msat` from SendResponse
-- [ ] P1: Advertise NUT-08 in SUPPORTED_NUTS — add `'8'` to `src/core/constants.ts` + route validation in melt, or remove partial change-output logic from meltTokens
-- [ ] P1: Add keyset rotation trigger — `rotateKeyset()` exists in MintService but nothing invokes it; add `POST /v1/admin/rotate-keyset` or `ROTATE_KEYSET_ON_START=true` env config
-- [ ] P1: Verify LND subscribeInvoices reconnect resilience — `startInvoiceSubscriptionLoop` 5s backoff only tested with FakeWallet; verify TLS/macaroon auth error handling and stream termination recovery
+- [x] P1: Extract actual routing fee from LND sendPayment — `src/lightning/lnd.ts:188` hardcodes `fee: 0`; extract `payment_route.total_fees_msat` from SendResponse
+- [x] P1: Advertise NUT-08 in SUPPORTED_NUTS — add `'8'` to `src/core/constants.ts` + route validation in melt, or remove partial change-output logic from meltTokens
+- [x] P1: Add keyset rotation trigger — `rotateKeyset()` exists in MintService but nothing invokes it; add `POST /v1/admin/rotate-keyset` or `ROTATE_KEYSET_ON_START=true` env config
+- [x] P1: Verify LND subscribeInvoices reconnect resilience — `startInvoiceSubscriptionLoop` 5s backoff only tested with FakeWallet; verify TLS/macaroon auth error handling and stream termination recovery
 
 ### P2 — Code Quality
 - [ ] P2: Add runtime guard for LND gRPC package loading — `src/lightning/lnd.ts:47` double-cast; add `if (!pkg.lnrpc?.Lightning) throw new Error('LND proto load failed')`

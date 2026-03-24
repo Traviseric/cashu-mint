@@ -27,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed dead void-reject/destBytes/paymentHash code from LND backend
 
 ### Fixed
+- Exponential backoff for subscribeInvoices reconnect (1s base, 60s cap)
+- Runtime guard for gRPC package load failure
+- DB enum cast validation for quote states
+- MintInfo.nuts typing tightened to `Record<string, Record<string, unknown>>`
 - Melt quote expiry check — mirrors getMintQuote behavior
 - fee_reserve persistence on melt quotes (stable NUT-05 fee)
 - Plain Error throws replaced with typed KeysetNotFoundError

@@ -12,8 +12,8 @@ Foundation for a working mint that can issue, swap, and melt ecash tokens.
 - [x] NUT-05: Melt tokens — fee estimation, pending proof hold, LN payment, burn on success
 - [x] NUT-06: Mint info endpoint
 - [x] NUT-07: Token state check (`POST /v1/checkstate`)
-- [ ] LND gRPC backend (production Lightning)
-- [ ] Integration tests against cashu-ts client
+- [x] LND gRPC backend (production Lightning)
+- [x] Integration tests against cashu-ts client
 
 ## Phase 2: Optional NUTs (2-4 weeks)
 

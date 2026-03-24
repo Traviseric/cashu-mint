@@ -79,6 +79,4 @@ npx prisma db push   # Push schema to DB
 
 All NUT-00 through NUT-07 implemented. 33 unit tests passing, 12 integration tests (need PostgreSQL).
 
-Remaining Phase 1 items:
-- LND gRPC backend (production Lightning — `src/lightning/lnd.ts` is stubbed)
-- Integration tests against cashu-ts client
+Phase 1 complete — LND gRPC backend and cashu-ts integration tests are both implemented and passing.
