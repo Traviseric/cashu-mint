@@ -84,23 +84,33 @@ main();
 
 /**
  * Background loop: subscribes to Lightning invoice updates and marks mint quotes PAID.
- * Automatically restarts on connection errors with a 5s backoff.
+ * Automatically restarts on connection errors with exponential backoff.
  */
 function startInvoiceSubscriptionLoop(
 	mintService: MintServiceType,
 	lightning: ILightningBackend,
 	logger: FastifyBaseLogger,
 ): void {
+	const BASE_DELAY_MS = 1000;
+	const MAX_DELAY_MS = 60000;
+	let attempt = 0;
+
 	const loop = async () => {
 		try {
+			attempt = 0; // Reset on successful connection
 			for await (const update of lightning.subscribeInvoices()) {
 				if (update.settled && update.paymentHash) {
 					await mintService.handleInvoiceSettled(update.paymentHash);
 				}
 			}
+			// Stream ended cleanly — reconnect at base delay
+			logger.info('Invoice subscription stream ended cleanly — reconnecting');
+			setTimeout(loop, BASE_DELAY_MS);
 		} catch (err) {
-			logger.error({ err }, 'Invoice subscription lost — restarting in 5s');
-			setTimeout(loop, 5000);
+			const delay = Math.min(BASE_DELAY_MS * 2 ** attempt, MAX_DELAY_MS);
+			logger.error({ err, attempt, retryInMs: delay }, 'Invoice subscription lost — retrying');
+			attempt++;
+			setTimeout(loop, delay);
 		}
 	};
 

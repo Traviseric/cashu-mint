@@ -147,5 +147,5 @@ export interface MintInfo {
 	description?: string;
 	description_long?: string;
 	contact?: Array<{ method: string; info: string }>;
-	nuts: Record<string, object>;
+	nuts: Record<string, Record<string, unknown>>;
 }

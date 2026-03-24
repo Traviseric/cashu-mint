@@ -46,6 +46,12 @@ export class LndBackend implements ILightningBackend {
 		});
 		const lnrpc = (grpc.loadPackageDefinition(packageDef) as unknown as GrpcPackage).lnrpc;
 
+		if (!lnrpc?.Lightning) {
+			throw new LightningBackendError(
+				'LND proto load failed — lnrpc.Lightning service not found in loaded package definition',
+			);
+		}
+
 		const tlsCert = fs.readFileSync(config.tlsCertPath);
 		const sslCreds = grpc.credentials.createSsl(tlsCert);
 

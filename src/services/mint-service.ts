@@ -23,6 +23,23 @@ import {
 	MINT_VERSION,
 	SUPPORTED_NUTS,
 } from '../core/constants.js';
+
+const VALID_MINT_QUOTE_STATES = ['UNPAID', 'PAID', 'ISSUED', 'EXPIRED'] as const;
+const VALID_MELT_QUOTE_STATES = ['UNPAID', 'PENDING', 'PAID', 'EXPIRED'] as const;
+
+function assertMintQuoteState(state: string): 'UNPAID' | 'PAID' | 'ISSUED' | 'EXPIRED' {
+	if (!(VALID_MINT_QUOTE_STATES as readonly string[]).includes(state)) {
+		throw new Error(`Invalid mint quote state from DB: ${state}`);
+	}
+	return state as 'UNPAID' | 'PAID' | 'ISSUED' | 'EXPIRED';
+}
+
+function assertMeltQuoteState(state: string): 'UNPAID' | 'PENDING' | 'PAID' | 'EXPIRED' {
+	if (!(VALID_MELT_QUOTE_STATES as readonly string[]).includes(state)) {
+		throw new Error(`Invalid melt quote state from DB: ${state}`);
+	}
+	return state as 'UNPAID' | 'PENDING' | 'PAID' | 'EXPIRED';
+}
 import {
 	ProofInvalidError,
 	TokenAlreadySpentError,
@@ -275,7 +292,7 @@ export class MintService {
 		return {
 			quote: quote.id,
 			request: quote.request,
-			state: quote.state as MintQuoteResponse['state'],
+			state: assertMintQuoteState(quote.state),
 			expiry: Math.floor(quote.expiry.getTime() / 1000),
 		};
 	}
@@ -397,7 +414,7 @@ export class MintService {
 			quote: quote.id,
 			amount: quote.amount,
 			fee_reserve: quote.feeReserve,
-			state: quote.state as MeltQuoteResponse['state'],
+			state: assertMeltQuoteState(quote.state),
 			expiry: Math.floor(quote.expiry.getTime() / 1000),
 		};
 	}

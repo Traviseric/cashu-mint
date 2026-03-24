@@ -11,7 +11,7 @@ export const MAX_PROOF_SECRET_LENGTH = 1024;
 export const DEFAULT_QUOTE_TTL = 900;
 
 /** NUTs supported by this mint */
-export const SUPPORTED_NUTS: Record<string, object> = {
+export const SUPPORTED_NUTS: Record<string, Record<string, unknown>> = {
 	'1': { methods: [{ method: 'bolt11', unit: 'sat' }], disabled: false },
 	'2': { methods: [{ method: 'bolt11', unit: 'sat' }], disabled: false },
 	'3': { methods: [{ method: 'bolt11', unit: 'sat' }] },
