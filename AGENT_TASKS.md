@@ -13,11 +13,11 @@
 - [x] P1: Verify LND subscribeInvoices reconnect resilience — `startInvoiceSubscriptionLoop` 5s backoff only tested with FakeWallet; verify TLS/macaroon auth error handling and stream termination recovery
 
 ### P2 — Code Quality
-- [ ] P2: Add runtime guard for LND gRPC package loading — `src/lightning/lnd.ts:47` double-cast; add `if (!pkg.lnrpc?.Lightning) throw new Error('LND proto load failed')`
-- [ ] P2: Validate DB enum casts for quote state — `mint-service.ts:278` and `:400` cast without validation; use mapping function or Zod parse
-- [ ] P2: Strengthen MintInfo.nuts typing — `src/core/types.ts:151` `Record<string, object>` to `Record<string, Record<string, unknown>>`
-- [ ] P2: Split meltTokens() into sub-methods — 108 lines (406-514); extract `_validateMeltInputs()` and `_executeMeltPayment()`
-- [ ] P2: Remove @fastify/swagger and @fastify/websocket dead dependencies from package.json
+- [x] P2: Add runtime guard for LND gRPC package loading — `src/lightning/lnd.ts:49` throws `LightningBackendError` if `lnrpc.Lightning` missing
+- [x] P2: Validate DB enum casts for quote state — `assertMintQuoteState()` / `assertMeltQuoteState()` guard functions at top of `mint-service.ts`
+- [x] P2: Strengthen MintInfo.nuts typing — `src/core/types.ts:150` now `Record<string, Record<string, unknown>>`
+- [ ] P2: Split meltTokens() into sub-methods — 108 lines (423-531); extract `_validateMeltInputs()` and `_executeMeltPayment()`
+- [x] P2: Remove @fastify/swagger and @fastify/websocket dead dependencies from package.json — already absent
 
 ### P3 — Test Coverage
 - [ ] P3: Add LndBackend unit tests — zero coverage for `src/lightning/lnd.ts`; mock gRPC; cover estimateFee, subscribeInvoices, reject-callback fix
